@@ -62,8 +62,11 @@ export default function AuthDialog({ open, onClose, onSuccess }: AuthDialogProps
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault()
-    setRegError(null)
-    setRegSuccess(null)
+    if (regPassword.length < 12) {
+      setRegError('Password must be at least 12 characters long.')
+      return
+    }
+
     setRegLoading(true)
 
     try {

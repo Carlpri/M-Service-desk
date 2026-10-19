@@ -28,10 +28,20 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   const data = isJson ? await response.json() : null
 
   if (!response.ok) {
+    const detailsMessage =
+      Array.isArray(data?.details) && data.details.length > 0
+        ? data.details
+            .map((d: { path?: (string | number)[]; message: string }) => {
+              const field = d.path && d.path.length > 0 ? `${d.path.join('.')}: ` : ''
+              return `${field}${d.message}`
+            })
+            .join('; ')
+        : null
+
     const errorMessage =
+      detailsMessage ||
       data?.message ||
       data?.error ||
-      (Array.isArray(data?.details) ? data.details.map((d: { message: string }) => d.message).join(', ') : null) ||
       `Request failed with status ${response.status}`
     const error = new Error(errorMessage)
     ;(error as unknown as { status: number; code?: string }).status = response.status

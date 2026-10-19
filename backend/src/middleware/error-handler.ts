@@ -4,6 +4,7 @@ import { HttpError } from '../utils/http-error.js'
 
 export const errorHandler: ErrorRequestHandler = (error, _request, response, _next) => {
   if (error instanceof ZodError) {
+    console.warn('Validation error:', JSON.stringify(error.flatten().fieldErrors))
     response.status(400).json({
       error: 'VALIDATION_ERROR',
       message: 'Request validation failed',
