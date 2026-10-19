@@ -6,52 +6,28 @@ const environmentSchema = z.object({
   DATABASE_URL: z.string().url().startsWith('postgresql://'),
   PORT: z.coerce.number().int().min(1).max(65535).default(3000),
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
+
+  // FRONTEND_URL is used for CORS. Supports comma-separated origins.
   FRONTEND_URL: z.string().default('http://localhost:5173'),
-  SMTP_HOST: z.string().min(1).optional(),
-  SMTP_PORT: z.coerce.number().int().min(1).max(65535).optional(),
-  SMTP_USER: z.string().min(1).optional(),
-  SMTP_PASSWORD: z.string().min(1).optional(),
-  EMAIL_FROM: z.string().email().optional(),
+
+  // FRONTEND_APP_URL is used to construct links inside emails
+  // (e.g. /verify-email?token=… and /reset-password?token=…).
   FRONTEND_APP_URL: z.string().url().default('http://localhost:5173'),
+
+  // Resend API key — required in production to send transactional email.
+  RESEND_API_KEY: z.string().min(1).optional(),
+
+  // The "from" address shown to recipients. Must be from a domain you
+  // have verified in the Resend dashboard (or onboarding@resend.dev
+  // for testing against your own address only).
+  EMAIL_FROM: z.string().email().optional(),
 }).superRefine((values, context) => {
-  const mailSettings = [
-    values.SMTP_HOST,
-    values.SMTP_PORT,
-    values.SMTP_USER,
-    values.SMTP_PASSWORD,
-    values.EMAIL_FROM,
-  ]
-  const configuredCount = mailSettings.filter((value) => value !== undefined).length
-
-  if (configuredCount !== 0 && configuredCount !== mailSettings.length) {
-    context.addIssue({
-      code: 'custom',
-      message: 'SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASSWORD, and EMAIL_FROM must be configured together',
-      path: ['SMTP_HOST'],
-    })
-  }
-
-  if (values.NODE_ENV === 'production' && configuredCount !== mailSettings.length) {
-    context.addIssue({
-      code: 'custom',
-      message: 'Email delivery settings are required in production',
-      path: ['SMTP_HOST'],
-    })
-  }
-
-  if (values.NODE_ENV === 'production' && !process.env.FRONTEND_APP_URL) {
+  // In production FRONTEND_APP_URL must be supplied explicitly and use HTTPS.
+  if (values.NODE_ENV === 'production' && !process.env['FRONTEND_APP_URL']) {
     context.addIssue({
       code: 'custom',
       message: 'FRONTEND_APP_URL is required in production',
       path: ['FRONTEND_APP_URL'],
-    })
-  }
-
-  if (values.NODE_ENV === 'production' && !process.env.FRONTEND_URL) {
-    context.addIssue({
-      code: 'custom',
-      message: 'FRONTEND_URL is required in production',
-      path: ['FRONTEND_URL'],
     })
   }
 
@@ -65,6 +41,45 @@ const environmentSchema = z.object({
       message: 'FRONTEND_APP_URL must use HTTPS in production',
       path: ['FRONTEND_APP_URL'],
     })
+  }
+
+  // In production FRONTEND_URL must be supplied explicitly.
+  if (values.NODE_ENV === 'production' && !process.env['FRONTEND_URL']) {
+    context.addIssue({
+      code: 'custom',
+      message: 'FRONTEND_URL is required in production',
+      path: ['FRONTEND_URL'],
+    })
+  }
+
+  // In production both Resend credentials must be present together.
+  if (values.NODE_ENV === 'production') {
+    if (!values.RESEND_API_KEY) {
+      context.addIssue({
+        code: 'custom',
+        message: 'RESEND_API_KEY is required in production for transactional email',
+        path: ['RESEND_API_KEY'],
+      })
+    }
+    if (!values.EMAIL_FROM) {
+      context.addIssue({
+        code: 'custom',
+        message: 'EMAIL_FROM is required in production for transactional email',
+        path: ['EMAIL_FROM'],
+      })
+    }
+  }
+
+  // Outside production, if only one of the two is set, remind the developer.
+  if (values.NODE_ENV !== 'production') {
+    const resendConfigured = [values.RESEND_API_KEY, values.EMAIL_FROM].filter(Boolean).length
+    if (resendConfigured === 1) {
+      context.addIssue({
+        code: 'custom',
+        message: 'RESEND_API_KEY and EMAIL_FROM must be configured together',
+        path: ['RESEND_API_KEY'],
+      })
+    }
   }
 })
 
@@ -84,11 +99,10 @@ if (frontendOrigins.length === 0) {
 export const env = {
   ...parsedEnvironment.data,
   frontendOrigins,
+  // emailConfigured is true only when both Resend credentials are present.
+  // auth.service.ts checks this flag before attempting to send any email,
+  // so no code path tries to deliver mail when the provider is not set up.
   emailConfigured: Boolean(
-    parsedEnvironment.data.SMTP_HOST &&
-      parsedEnvironment.data.SMTP_PORT &&
-      parsedEnvironment.data.SMTP_USER &&
-      parsedEnvironment.data.SMTP_PASSWORD &&
-      parsedEnvironment.data.EMAIL_FROM,
+    parsedEnvironment.data.RESEND_API_KEY && parsedEnvironment.data.EMAIL_FROM,
   ),
 }

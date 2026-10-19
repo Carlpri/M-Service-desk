@@ -1,6 +1,11 @@
-import nodemailer from 'nodemailer'
+import { Resend } from 'resend'
 import { env } from '../../config/env.js'
 
+// --------------------------------------------------------------------------
+// Shared message shape — unchanged from the original SMTP implementation.
+// auth.service.ts calls sendVerification() and sendPasswordReset() through
+// the EmailDelivery interface; it never reaches into this module directly.
+// --------------------------------------------------------------------------
 type AccountMessage = {
   email: string
   name: string
@@ -12,37 +17,65 @@ export interface EmailDelivery {
   sendPasswordReset(message: AccountMessage): Promise<void>
 }
 
-class SmtpEmailDelivery implements EmailDelivery {
-  private readonly transporter = nodemailer.createTransport({
-    host: env.SMTP_HOST,
-    port: env.SMTP_PORT,
-    secure: env.SMTP_PORT === 465,
-    requireTLS: env.SMTP_PORT !== 465,
-    auth: {
-      user: env.SMTP_USER,
-      pass: env.SMTP_PASSWORD,
-    },
-  })
+// --------------------------------------------------------------------------
+// ResendEmailDelivery
+//
+// Replaces SmtpEmailDelivery. Uses Resend's Node.js SDK instead of
+// nodemailer so no SMTP host, port, or credentials are needed.
+//
+// Email links point to FRONTEND_APP_URL, exactly as they did before.
+// Subjects and recipient logic are preserved verbatim.
+// --------------------------------------------------------------------------
+class ResendEmailDelivery implements EmailDelivery {
+  // The Resend client is constructed once. env.RESEND_API_KEY is guaranteed
+  // to be a non-empty string here because emailDelivery is only instantiated
+  // when env.emailConfigured is true (checked in env.ts).
+  private readonly client = new Resend(env.RESEND_API_KEY!)
 
   async sendVerification(message: AccountMessage): Promise<void> {
-    await this.transporter.sendMail({
-      from: env.EMAIL_FROM,
+    const link = `${env.FRONTEND_APP_URL}/verify-email?token=${encodeURIComponent(message.token)}`
+
+    const { error } = await this.client.emails.send({
+      from: env.EMAIL_FROM!,
       to: message.email,
       subject: 'Verify your M-Service Desk email',
-      text: `Hello ${message.name}, verify your email: ${env.FRONTEND_APP_URL}/verify-email?token=${encodeURIComponent(message.token)}`,
+      // Plain-text body — identical wording to the original SMTP template.
+      text: `Hello ${message.name}, verify your email: ${link}`,
     })
+
+    if (error) {
+      // Log a safe summary. Never log the API key, recipient address, or token.
+      console.error('Resend delivery error (verification):', error.name, error.message)
+      throw new Error('Email delivery failed')
+    }
   }
 
   async sendPasswordReset(message: AccountMessage): Promise<void> {
-    await this.transporter.sendMail({
-      from: env.EMAIL_FROM,
+    const link = `${env.FRONTEND_APP_URL}/reset-password?token=${encodeURIComponent(message.token)}`
+
+    const { error } = await this.client.emails.send({
+      from: env.EMAIL_FROM!,
       to: message.email,
       subject: 'Reset your M-Service Desk password',
-      text: `Hello ${message.name}, reset your password: ${env.FRONTEND_APP_URL}/reset-password?token=${encodeURIComponent(message.token)}`,
+      // Plain-text body — identical wording to the original SMTP template.
+      text: `Hello ${message.name}, reset your password: ${link}`,
     })
+
+    if (error) {
+      // Log a safe summary. Never log the API key, recipient address, or token.
+      console.error('Resend delivery error (password-reset):', error.name, error.message)
+      throw new Error('Email delivery failed')
+    }
   }
 }
 
+// --------------------------------------------------------------------------
+// emailDelivery is null when Resend is not configured (dev without API key).
+// auth.service.ts already handles the null case:
+//   - register()               → skips sending, marks verificationEmailSent false
+//   - requestPasswordReset()   → returns immediately (silent no-op)
+//   - requestEmailVerification → returns immediately (silent no-op)
+// --------------------------------------------------------------------------
 export const emailDelivery: EmailDelivery | null = env.emailConfigured
-  ? new SmtpEmailDelivery()
+  ? new ResendEmailDelivery()
   : null

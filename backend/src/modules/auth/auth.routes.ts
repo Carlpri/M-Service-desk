@@ -82,7 +82,7 @@ authRouter.post('/change-password', authenticate, async (request, response) => {
 authRouter.post('/forgot-password', passwordResetRequestLimiter, async (request, response) => {
   await authService.requestPasswordReset(request.body)
   response.status(202).json({
-    message: 'If an eligible account exists, the reset request will be processed. Email delivery requires SMTP configuration.',
+    message: 'If an eligible account exists, a password reset email will be sent.',
   })
 })
 
@@ -102,7 +102,7 @@ authRouter.post('/verify-email', emailVerificationLimiter, async (request, respo
 authRouter.post('/resend-verification', emailVerificationLimiter, async (request, response) => {
   await authService.requestEmailVerification(request.body)
   response.status(202).json({
-    message: 'If an eligible account exists, the verification request will be processed. Email delivery requires SMTP configuration.',
+    message: 'If an eligible account exists, a verification email will be sent.',
   })
 })
 

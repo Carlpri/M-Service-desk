@@ -254,7 +254,6 @@ describe('authentication routes', () => {
 
     expect(response.status).toBe(202)
     expect(response.body.message).toMatch(/if an eligible account exists/i)
-    expect(response.body.message).toContain('SMTP configuration')
     expect(mocks.prisma.user.findUnique).not.toHaveBeenCalled()
   })
 
