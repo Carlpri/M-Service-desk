@@ -47,6 +47,10 @@
     {
       "key": "resetToken",
       "value": ""
+    },
+    {
+      "key": "requestId",
+      "value": ""
     }
   ],
   "item": [
@@ -348,6 +352,39 @@
           ]
         },
         {
+          "name": "Admin Login (saves adminToken)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@muranga.go.ke\",\n  \"password\": \"CountyAdmin2026!\"\n}"
+            },
+            "url": "{{baseUrl}}/api/auth/login"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Admin login returns admin bearer token\", function () {",
+                  "  pm.response.to.have.status(200);",
+                  "  const body = pm.response.json();",
+                  "  pm.expect(body.user.role).to.eql(\"ADMIN\");",
+                  "  pm.collectionVariables.set(\"adminToken\", body.token);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
           "name": "Current profile",
           "request": {
             "method": "GET",
@@ -635,6 +672,238 @@
                   "pm.test('Invalid reset token is rejected', function () {",
                   "  pm.response.to.have.status(400);",
                   "  pm.expect(pm.response.json().error).to.eql('RESET_TOKEN_INVALID');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "5 - Service requests",
+      "item": [
+        {
+          "name": "Submit service request (Citizen)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"category\": \"Roads & Infrastructure\",\n  \"location\": \"Kiharu Constituency, Muranga\",\n  \"description\": \"Severe potholes near the market entrance need resurfacing.\",\n  \"imageUrl\": \"\"\n}"
+            },
+            "url": "{{baseUrl}}/api/service-requests"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Service request created successfully\", function () {",
+                  "  pm.response.to.have.status(201);",
+                  "  const body = pm.response.json();",
+                  "  pm.expect(body.request.status).to.eql(\"PENDING\");",
+                  "  pm.expect(body.request).to.have.property(\"referenceNumber\");",
+                  "  pm.collectionVariables.set(\"requestId\", body.request.id);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get my service requests (Citizen)",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/service-requests"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Returns citizen requests list\", function () {",
+                  "  pm.response.to.have.status(200);",
+                  "  const body = pm.response.json();",
+                  "  pm.expect(body).to.have.property(\"requests\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get service request by ID (Citizen)",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/service-requests/{{requestId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Returns specific request details\", function () {",
+                  "  pm.response.to.have.status(200);",
+                  "  const body = pm.response.json();",
+                  "  pm.expect(body.request.id).to.eql(pm.collectionVariables.get(\"requestId\"));",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get all service requests (Admin)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{adminToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "url": "{{baseUrl}}/api/admin/service-requests"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Admin receives all service requests\", function () {",
+                  "  pm.response.to.have.status(200);",
+                  "  const body = pm.response.json();",
+                  "  pm.expect(body).to.have.property(\"requests\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get analytics overview (Admin)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{adminToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "url": "{{baseUrl}}/api/admin/service-requests/analytics"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Admin receives analytics breakdown\", function () {",
+                  "  pm.response.to.have.status(200);",
+                  "  const body = pm.response.json();",
+                  "  pm.expect(body.analytics).to.have.property(\"totalRequests\");",
+                  "  pm.expect(body.analytics).to.have.property(\"statusBreakdown\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Update request status to IN_PROGRESS (Admin)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{adminToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"IN_PROGRESS\",\n  \"resolutionNote\": \"County road maintenance team dispatched to inspect site.\"\n}"
+            },
+            "url": "{{baseUrl}}/api/admin/service-requests/{{requestId}}/status"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status updated to IN_PROGRESS\", function () {",
+                  "  pm.response.to.have.status(200);",
+                  "  const body = pm.response.json();",
+                  "  pm.expect(body.request.status).to.eql(\"IN_PROGRESS\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Update request status to RESOLVED (Admin)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{adminToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"RESOLVED\",\n  \"resolutionNote\": \"Road resurfacing completed.\"\n}"
+            },
+            "url": "{{baseUrl}}/api/admin/service-requests/{{requestId}}/status"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status updated to RESOLVED\", function () {",
+                  "  pm.response.to.have.status(200);",
+                  "  const body = pm.response.json();",
+                  "  pm.expect(body.request.status).to.eql(\"RESOLVED\");",
                   "});"
                 ]
               }
