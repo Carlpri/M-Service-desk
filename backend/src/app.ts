@@ -11,6 +11,8 @@ import {
   serviceRequestsRouter,
 } from './modules/service-requests/service-requests.routes.js'
 
+import { HttpError } from './utils/http-error.js'
+
 const app = express()
 
 app.use(
@@ -21,7 +23,7 @@ app.use(
         return
       }
 
-      callback(new Error('Origin is not allowed by CORS'))
+      callback(new HttpError(403, 'CORS_ORIGIN_DENIED', `Origin '${origin}' is not allowed by CORS`))
     },
   }),
 )

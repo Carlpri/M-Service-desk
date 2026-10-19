@@ -8,11 +8,11 @@ const environmentSchema = z.object({
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
 
   // FRONTEND_URL is used for CORS. Supports comma-separated origins.
-  FRONTEND_URL: z.string().default('http://localhost:5173'),
+  FRONTEND_URL: z.string().default('http://localhost:5173,https://frontend-nu-six-46.vercel.app'),
 
   // FRONTEND_APP_URL is used to construct links inside emails
   // (e.g. /verify-email?token=… and /reset-password?token=…).
-  FRONTEND_APP_URL: z.string().url().default('http://localhost:5173'),
+  FRONTEND_APP_URL: z.string().url().default('https://frontend-nu-six-46.vercel.app'),
 
   // Resend API key — required in production to send transactional email.
   RESEND_API_KEY: z.string().min(1).optional(),
