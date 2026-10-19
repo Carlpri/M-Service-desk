@@ -50,7 +50,9 @@ authRouter.post('/register', registrationLimiter, async (request, response) => {
   response.status(201).json({
     message: result.verificationEmailSent
       ? 'Account created. Check your email to verify your address before signing in.'
-      : 'Account created. Email verification is required; email delivery is not configured.',
+      : result.user.emailVerifiedAt
+        ? 'Account created and verified. You can now sign in.'
+        : 'Account created. Email verification is required; email delivery is not configured.',
     user: result.user,
   })
 })

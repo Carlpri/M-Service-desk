@@ -111,4 +111,15 @@ To create production builds, run `npm run build` in either application directory
 
 ## Phase 2 authentication
 
-Authentication routes, role permissions, security decisions, endpoint examples, SMTP setup, Postman guidance, and implementation/testing limitations are documented in [backend/PHASE-2-AUTH.md](./backend/PHASE-2-AUTH.md). Run `npm test` from `backend/` to execute the mocked auth API tests. These tests do not replace applying migrations to and testing against a dedicated PostgreSQL database.
+Authentication routes, role permissions, security decisions, endpoint examples, SMTP setup, Postman guidance, and implementation/testing limitations are documented in [backend/PHASE-2-AUTH.md](./backend/PHASE-2-AUTH.md). Run `npm test` from `backend/` to execute the mocked auth and service request tests.
+
+## Phase 3 service requests and administrative desk
+
+Phase 3 delivers the public service request workflows and administrative triage desk:
+
+- **Citizen Request Submission:** Citizens submit requests with sector category, location/ward, incident description, and optional image URL. A unique reference number (`MSD-YYYYMMDD-XXXXX`) is automatically assigned.
+- **Citizen Request Tracking:** Citizens view and track their submitted requests through live status indicators (`PENDING` -> `IN_PROGRESS` -> `RESOLVED`) and review official county resolution notes.
+- **Administrative Triage Desk:** Administrators view requests across all citizens, update status transitions (`PENDING` -> `IN_PROGRESS` -> `RESOLVED`), append county resolution notes, and view real-time analytics KPIs.
+- **Full-Featured Frontend:** Interactive Murang'a County portal featuring real-time health checks, authentication modal, request submission with live validation, citizen tracking stepper, and an administrator management dashboard.
+- **Postman Collections:** Comprehensive test collections and environment files are available in `docs/postman/` and `postman/`.
+

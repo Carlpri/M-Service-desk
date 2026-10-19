@@ -1,0 +1,581 @@
+{
+  "info": {
+    "_postman_id": "a98402b8-7241-4c12-9c9e-ec83709b11d2",
+    "name": "M-Service Desk - Full API Collection (Phases 1-3)",
+    "description": "Complete Postman collection for M-Service Desk — Murang'a County Public Service Request System. Covers System Health, Phase 2 Authentication & Authorization, Phase 3 Citizen Service Requests, and Administrative Triage & Analytics.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "userEmail",
+      "value": "citizen@muranga.example.com",
+      "type": "string"
+    },
+    {
+      "key": "password",
+      "value": "CountyDesk#2026Passphrase",
+      "type": "string"
+    },
+    {
+      "key": "citizenToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "adminToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "adminEmail",
+      "value": "admin@muranga.go.ke",
+      "type": "string"
+    },
+    {
+      "key": "adminPassword",
+      "value": "CountyAdmin2026!",
+      "type": "string"
+    },
+    {
+      "key": "requestId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "referenceNumber",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "verificationToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "resetToken",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1 - System Health & Availability",
+      "item": [
+        {
+          "name": "GET API Root",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('API root responds 200 OK', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "  pm.expect(pm.response.json().application).to.eql('M-Service Desk');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET Health Check",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/health"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Health check responds 200 or 503 depending on database status', function () {",
+                  "  pm.expect([200, 503]).to.include(pm.response.code);",
+                  "  const json = pm.response.json();",
+                  "  pm.expect(json.application).to.eql('M-Service Desk');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "2 - Authentication & RBAC",
+      "item": [
+        {
+          "name": "Register Citizen",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/auth/register",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Amina Citizen\",\n  \"email\": \"{{userEmail}}\",\n  \"password\": \"{{password}}\",\n  \"role\": \"ADMIN\"\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Registration succeeds with 201 Created and assigns CITIZEN role', function () {",
+                  "  pm.response.to.have.status(201);",
+                  "  const json = pm.response.json();",
+                  "  pm.expect(json.user.role).to.eql('CITIZEN');",
+                  "  pm.expect(json.user.email).to.eql(pm.collectionVariables.get('userEmail').toLowerCase());",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Login Citizen",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/auth/login",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{userEmail}}\",\n  \"password\": \"{{password}}\"\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "  const json = pm.response.json();",
+                  "  pm.collectionVariables.set('citizenToken', json.token);",
+                  "  pm.test('Login returns opaque bearer token', function () {",
+                  "    pm.expect(json.token).to.be.a('string');",
+                  "    pm.expect(json.tokenType).to.eql('Bearer');",
+                  "  });",
+                  "} else {",
+                  "  pm.test('Email verification required before login', function () {",
+                  "    pm.expect(pm.response.code).to.eql(401);",
+                  "  });",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get Authenticated Profile (GET /api/auth/me)",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/auth/me",
+            "header": [{ "key": "Authorization", "value": "Bearer {{citizenToken}}" }]
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Protected profile returns authenticated user details', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "  const json = pm.response.json();",
+                  "  pm.expect(json.user.email).to.be.a('string');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Reject Unauthenticated Profile (Negative Test)",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/auth/me"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Rejects request without bearer token with 401', function () {",
+                  "  pm.response.to.have.status(401);",
+                  "  pm.expect(pm.response.json().error).to.eql('AUTHENTICATION_REQUIRED');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Citizen Blocked from Admin Users (Negative RBAC Test)",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/admin/users",
+            "header": [{ "key": "Authorization", "value": "Bearer {{citizenToken}}" }]
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Citizen is blocked from admin users list with 403 Forbidden', function () {",
+                  "  pm.response.to.have.status(403);",
+                  "  pm.expect(pm.response.json().error).to.eql('FORBIDDEN');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Login Admin",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/auth/login",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{adminEmail}}\",\n  \"password\": \"{{adminPassword}}\"\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Admin login succeeds with 200 OK and returns bearer token', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "  const json = pm.response.json();",
+                  "  pm.collectionVariables.set('adminToken', json.token);",
+                  "  pm.expect(json.user.role).to.eql('ADMIN');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Admin Lists Users",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/admin/users?page=1&pageSize=20",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }]
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Admin lists registered users with 200 OK', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "  const json = pm.response.json();",
+                  "  pm.expect(json.users).to.be.an('array');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "3 - Citizen Service Requests",
+      "item": [
+        {
+          "name": "Submit Service Request (POST /api/service-requests)",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/service-requests",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{citizenToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"category\": \"Roads & Infrastructure\",\n  \"location\": \"Kiharu Ward, Murang'a Town bypass near general hospital\",\n  \"description\": \"Large pothole developing after recent rains, impeding transport flow and threatening pedestrian safety.\",\n  \"imageUrl\": \"https://example.com/photos/road-damage.jpg\"\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Service request created successfully with 201 Created', function () {",
+                  "  pm.response.to.have.status(201);",
+                  "  const json = pm.response.json();",
+                  "  pm.expect(json.request.status).to.eql('PENDING');",
+                  "  pm.expect(json.request.referenceNumber).to.match(/^MSD-\\d{8}-[A-Z0-9]+$/);",
+                  "  pm.collectionVariables.set('requestId', json.request.id);",
+                  "  pm.collectionVariables.set('referenceNumber', json.request.referenceNumber);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Reject Short Description (Negative Validation Test)",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/service-requests",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{citizenToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"category\": \"Roads & Infrastructure\",\n  \"location\": \"Kiharu Ward\",\n  \"description\": \"Fix road\"\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Validation rejects description under 10 chars with 400 Bad Request', function () {",
+                  "  pm.response.to.have.status(400);",
+                  "  pm.expect(pm.response.json().error).to.eql('VALIDATION_ERROR');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get Citizen's Own Requests (GET /api/service-requests)",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/service-requests?page=1&pageSize=20",
+            "header": [{ "key": "Authorization", "value": "Bearer {{citizenToken}}" }]
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Returns list of citizen requests with 200 OK', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "  const json = pm.response.json();",
+                  "  pm.expect(json.requests).to.be.an('array');",
+                  "  pm.expect(json.total).to.be.a('number');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get Service Request by ID (GET /api/service-requests/:id)",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/service-requests/{{requestId}}",
+            "header": [{ "key": "Authorization", "value": "Bearer {{citizenToken}}" }]
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Returns specific request details with 200 OK', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "  const json = pm.response.json();",
+                  "  pm.expect(json.request.id).to.eql(pm.collectionVariables.get('requestId'));",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Citizen Blocked from Modifying Request Status (Negative RBAC Test)",
+          "request": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/api/admin/service-requests/{{requestId}}/status",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{citizenToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"RESOLVED\",\n  \"resolutionNote\": \"Citizen attempting self-resolution\"\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Citizen cannot change status - returns 403 Forbidden', function () {",
+                  "  pm.response.to.have.status(403);",
+                  "  pm.expect(pm.response.json().error).to.eql('FORBIDDEN');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "4 - Administrative Desk & Analytics",
+      "item": [
+        {
+          "name": "Admin List All Service Requests",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/admin/service-requests?page=1&pageSize=20",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }]
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Admin lists requests across all citizens with 200 OK', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "  const json = pm.response.json();",
+                  "  pm.expect(json.requests).to.be.an('array');",
+                  "  pm.expect(json.total).to.be.a('number');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Admin Update Request Status to IN_PROGRESS",
+          "request": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/api/admin/service-requests/{{requestId}}/status",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{adminToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"IN_PROGRESS\",\n  \"resolutionNote\": \"County Department of Roads has dispatched a repair crew for inspection.\"\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status transitioned to IN_PROGRESS with 200 OK', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "  const json = pm.response.json();",
+                  "  pm.expect(json.request.status).to.eql('IN_PROGRESS');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Admin Update Request Status to RESOLVED",
+          "request": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/api/admin/service-requests/{{requestId}}/status",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{adminToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"RESOLVED\",\n  \"resolutionNote\": \"Potholes filled and bitumen compacted by Murang'a County road engineering unit.\"\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status transitioned to RESOLVED with 200 OK', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "  const json = pm.response.json();",
+                  "  pm.expect(json.request.status).to.eql('RESOLVED');",
+                  "  pm.expect(json.request.resolutionNote).to.include('bitumen compacted');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Admin Get Service Requests Analytics",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/admin/service-requests/analytics",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }]
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Returns aggregated analytics metrics with 200 OK', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "  const json = pm.response.json();",
+                  "  pm.expect(json.analytics).to.have.property('total');",
+                  "  pm.expect(json.analytics).to.have.property('pending');",
+                  "  pm.expect(json.analytics).to.have.property('inProgress');",
+                  "  pm.expect(json.analytics).to.have.property('resolved');",
+                  "  pm.expect(json.analytics.byCategory).to.be.an('array');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Citizen Blocked from Analytics (Negative RBAC Test)",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/admin/service-requests/analytics",
+            "header": [{ "key": "Authorization", "value": "Bearer {{citizenToken}}" }]
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Citizen blocked from analytics with 403 Forbidden', function () {",
+                  "  pm.response.to.have.status(403);",
+                  "  pm.expect(pm.response.json().error).to.eql('FORBIDDEN');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -6,6 +6,10 @@ import { notFoundHandler } from './middleware/not-found.js'
 import healthRouter from './modules/health/health.routes.js'
 import authRouter from './modules/auth/auth.routes.js'
 import usersRouter from './modules/users/users.routes.js'
+import {
+  adminServiceRequestsRouter,
+  serviceRequestsRouter,
+} from './modules/service-requests/service-requests.routes.js'
 
 const app = express()
 
@@ -33,6 +37,8 @@ app.get('/', (_request, response) => {
 app.use('/api/health', healthRouter)
 app.use('/api/auth', authRouter)
 app.use('/api/admin/users', usersRouter)
+app.use('/api/service-requests', serviceRequestsRouter)
+app.use('/api/admin/service-requests', adminServiceRequestsRouter)
 
 app.use(notFoundHandler)
 app.use(errorHandler)

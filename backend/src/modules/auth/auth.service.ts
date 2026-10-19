@@ -1,5 +1,6 @@
 import { UserRole } from '../../generated/prisma/enums.js'
 import { prisma } from '../../config/prisma.js'
+import { env } from '../../config/env.js'
 import { emailDelivery } from './email-delivery.js'
 import {
   changePasswordSchema,
@@ -67,6 +68,8 @@ export async function register(input: unknown) {
   const data = registerSchema.parse(input)
   const passwordHash = await hashPassword(data.password)
 
+  const isDevAutoVerify = env.NODE_ENV === 'development' && !env.emailConfigured
+
   let user
   try {
     user = await prisma.user.create({
@@ -75,6 +78,7 @@ export async function register(input: unknown) {
         email: data.email,
         passwordHash,
         role: UserRole.CITIZEN,
+        emailVerifiedAt: isDevAutoVerify ? new Date() : null,
       },
       select: {
         id: true,
@@ -347,4 +351,35 @@ export async function listUsers(page: number, pageSize: number) {
   ])
 
   return { users: users.map(publicUser), page, pageSize, total }
+}
+
+export async function pruneExpiredSessionsAndTokens(): Promise<{
+  sessionsDeleted: number
+  resetTokensDeleted: number
+  verificationTokensDeleted: number
+}> {
+  const now = new Date()
+  const [sessions, resetTokens, verificationTokens] = await prisma.$transaction([
+    prisma.authSession.deleteMany({
+      where: {
+        OR: [{ expiresAt: { lt: now } }, { revokedAt: { not: null } }],
+      },
+    }),
+    prisma.passwordResetToken.deleteMany({
+      where: {
+        OR: [{ expiresAt: { lt: now } }, { usedAt: { not: null } }],
+      },
+    }),
+    prisma.emailVerificationToken.deleteMany({
+      where: {
+        OR: [{ expiresAt: { lt: now } }, { usedAt: { not: null } }],
+      },
+    }),
+  ])
+
+  return {
+    sessionsDeleted: sessions.count,
+    resetTokensDeleted: resetTokens.count,
+    verificationTokensDeleted: verificationTokens.count,
+  }
 }
