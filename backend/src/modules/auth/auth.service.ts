@@ -68,7 +68,7 @@ export async function register(input: unknown) {
   const data = registerSchema.parse(input)
   const passwordHash = await hashPassword(data.password)
 
-  const isDevAutoVerify = env.NODE_ENV === 'development' && !env.emailConfigured
+  const isDevAutoVerify = !env.emailConfigured
 
   let user
   try {

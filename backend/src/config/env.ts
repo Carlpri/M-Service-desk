@@ -52,34 +52,14 @@ const environmentSchema = z.object({
     })
   }
 
-  // In production both Resend credentials must be present together.
-  if (values.NODE_ENV === 'production') {
-    if (!values.RESEND_API_KEY) {
-      context.addIssue({
-        code: 'custom',
-        message: 'RESEND_API_KEY is required in production for transactional email',
-        path: ['RESEND_API_KEY'],
-      })
-    }
-    if (!values.EMAIL_FROM) {
-      context.addIssue({
-        code: 'custom',
-        message: 'EMAIL_FROM is required in production for transactional email',
-        path: ['EMAIL_FROM'],
-      })
-    }
-  }
-
-  // Outside production, if only one of the two is set, remind the developer.
-  if (values.NODE_ENV !== 'production') {
-    const resendConfigured = [values.RESEND_API_KEY, values.EMAIL_FROM].filter(Boolean).length
-    if (resendConfigured === 1) {
-      context.addIssue({
-        code: 'custom',
-        message: 'RESEND_API_KEY and EMAIL_FROM must be configured together',
-        path: ['RESEND_API_KEY'],
-      })
-    }
+  // If one Resend credential is set, the other must be present as well.
+  const resendCount = [values.RESEND_API_KEY, values.EMAIL_FROM].filter(Boolean).length
+  if (resendCount === 1) {
+    context.addIssue({
+      code: 'custom',
+      message: 'RESEND_API_KEY and EMAIL_FROM must be configured together',
+      path: ['RESEND_API_KEY'],
+    })
   }
 })
 
