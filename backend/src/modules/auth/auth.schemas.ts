@@ -1,7 +1,7 @@
 import { z } from 'zod'
 
 const emailSchema = z
-  .string({ required_error: 'Email address is required' })
+  .string()
   .trim()
   .email('Invalid email address')
   .max(254, 'Email must be at most 254 characters')
@@ -9,13 +9,13 @@ const emailSchema = z
 
 export const registerSchema = z.object({
   name: z
-    .string({ required_error: 'Full name is required' })
+    .string()
     .trim()
     .min(1, 'Full name is required')
     .max(100, 'Full name must be at most 100 characters'),
   email: emailSchema,
   password: z
-    .string({ required_error: 'Password is required' })
+    .string()
     .min(12, 'Password must be at least 12 characters')
     .max(128, 'Password must be at most 128 characters'),
 })
@@ -23,7 +23,7 @@ export const registerSchema = z.object({
 export const loginSchema = z.object({
   email: emailSchema,
   password: z
-    .string({ required_error: 'Password is required' })
+    .string()
     .min(1, 'Password is required')
     .max(128, 'Password must be at most 128 characters'),
 })

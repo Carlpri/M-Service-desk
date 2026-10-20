@@ -50,7 +50,9 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
     if (isOffline) {
       throw new Error('You are currently offline. Please check your internet connection.')
     }
-    throw new Error('Unable to connect to M-Service Desk server. Please check your network or try again shortly.')
+    throw new Error(
+      'Unable to connect to M-Service Desk server. If this persists, the server may be sleeping or restarting.',
+    )
   }
 
   const contentType = response.headers.get('content-type')
@@ -74,13 +76,39 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
             .join(' • ')
         : null
 
-    const errorMessage =
-      data?.message ||
-      detailsMessage ||
-      data?.error ||
-      `Request failed with status ${response.status}`
+    let statusMessage = data?.message || detailsMessage
+    if (!statusMessage) {
+      switch (response.status) {
+        case 400:
+          statusMessage = 'Request validation failed. Please check the entered data.'
+          break
+        case 401:
+          statusMessage = 'Email or password is incorrect.'
+          break
+        case 403:
+          statusMessage =
+            data?.error === 'CORS_ORIGIN_DENIED'
+              ? 'Access denied by CORS security policy. This domain is not permitted.'
+              : 'Access denied. You do not have permission for this resource.'
+          break
+        case 404:
+          statusMessage = 'The requested endpoint was not found.'
+          break
+        case 409:
+          statusMessage = 'An account with this email already exists.'
+          break
+        case 429:
+          statusMessage = 'Too many requests. Please wait a few seconds and try again.'
+          break
+        default:
+          statusMessage =
+            response.status >= 500
+              ? 'County Desk server encountered an error. Please try again shortly.'
+              : `Request failed with status ${response.status}`
+      }
+    }
 
-    const error = new Error(errorMessage)
+    const error = new Error(statusMessage)
     ;(error as unknown as { status: number; code?: string; fieldErrors?: Record<string, string> }).status = response.status
     ;(error as unknown as { status: number; code?: string; fieldErrors?: Record<string, string> }).code = data?.error
     ;(error as unknown as { status: number; code?: string; fieldErrors?: Record<string, string> }).fieldErrors = detailsMap

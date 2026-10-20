@@ -1,6 +1,6 @@
 export function parseOrigins(value: string): string[] {
   return value
     .split(',')
-    .map((origin) => origin.trim())
+    .map((origin) => origin.trim().replace(/\/+$/, ''))
     .filter(Boolean)
 }

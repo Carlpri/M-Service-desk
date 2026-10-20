@@ -18,11 +18,13 @@ const app = express()
 app.use(
   cors({
     origin(origin, callback) {
+      const normalizedOrigin = origin ? origin.replace(/\/+$/, '') : ''
       if (
         !origin ||
+        env.frontendOrigins.includes(normalizedOrigin) ||
         env.frontendOrigins.includes(origin) ||
         /^http:\/\/(localhost|127\.0\.0\.1|192\.168\.\d+\.\d+|10\.\d+\.\d+\.\d+|172\.(1[6-9]|2\d|3[01])\.\d+\.\d+)(:\d+)?$/.test(
-          origin,
+          normalizedOrigin,
         )
       ) {
         callback(null, true)
@@ -31,6 +33,9 @@ app.use(
 
       callback(new HttpError(403, 'CORS_ORIGIN_DENIED', `Origin '${origin}' is not allowed by CORS`))
     },
+    credentials: true,
+    methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
   }),
 )
 app.use(express.json())
