@@ -592,10 +592,11 @@ export default function SubmitRequestCard({
                       <Box
                         sx={{
                           p: 2,
-                          border: '1px solid #e2e8f0',
+                          border: '1px solid',
+                          borderColor: 'divider',
                           borderRadius: '4px',
                           textAlign: 'center',
-                          bgcolor: '#ffffff',
+                          bgcolor: 'background.paper',
                         }}
                       >
                         <Typography variant="subtitle2" color="text.secondary" sx={{ display: 'block', mb: 1.5, fontWeight: 700 }}>
