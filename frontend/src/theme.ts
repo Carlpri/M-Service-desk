@@ -117,13 +117,13 @@ export function getAppTheme(mode: 'light' | 'dark'): Theme {
       },
     },
     shape: {
-      borderRadius: 14,
+      borderRadius: 4,
     },
     components: {
       MuiButton: {
         styleOverrides: {
           root: {
-            borderRadius: 10,
+            borderRadius: 4,
             boxShadow: 'none',
             textTransform: 'none',
             fontWeight: 700,
@@ -155,28 +155,43 @@ export function getAppTheme(mode: 'light' | 'dark'): Theme {
       MuiCard: {
         styleOverrides: {
           root: {
-            borderRadius: 16,
+            borderRadius: 4,
             backgroundColor: isDark ? '#0F261E' : '#FFFFFF',
             border: `1px solid ${isDark ? 'rgba(150, 191, 138, 0.12)' : 'rgba(0, 65, 46, 0.08)'}`,
             boxShadow: isDark
-              ? '0 6px 20px rgba(0, 0, 0, 0.35)'
-              : '0 4px 18px rgba(0, 65, 46, 0.04)',
+              ? '0 4px 14px rgba(0, 0, 0, 0.35)'
+              : '0 2px 10px rgba(0, 65, 46, 0.04)',
             transition: 'box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s ease',
-          },
-        },
-      },
-      MuiChip: {
-        styleOverrides: {
-          root: {
-            borderRadius: 8,
-            fontWeight: 700,
           },
         },
       },
       MuiPaper: {
         styleOverrides: {
           root: {
+            borderRadius: 4,
             backgroundImage: 'none',
+          },
+        },
+      },
+      MuiDialog: {
+        styleOverrides: {
+          paper: {
+            borderRadius: 4,
+          },
+        },
+      },
+      MuiAlert: {
+        styleOverrides: {
+          root: {
+            borderRadius: 4,
+          },
+        },
+      },
+      MuiChip: {
+        styleOverrides: {
+          root: {
+            borderRadius: 4,
+            fontWeight: 700,
           },
         },
       },
@@ -184,7 +199,7 @@ export function getAppTheme(mode: 'light' | 'dark'): Theme {
         styleOverrides: {
           root: {
             '& .MuiOutlinedInput-root': {
-              borderRadius: 10,
+              borderRadius: 4,
               backgroundColor: isDark ? 'rgba(255, 255, 255, 0.03)' : '#FFFFFF',
               '& fieldset': {
                 borderColor: isDark ? 'rgba(150, 191, 138, 0.2)' : 'rgba(0, 65, 46, 0.16)',

@@ -21,6 +21,12 @@ const environmentSchema = z.object({
   // have verified in the Resend dashboard (or onboarding@resend.dev
   // for testing against your own address only).
   EMAIL_FROM: z.string().email().optional(),
+
+  // Cloudinary credentials for photo evidence upload on service requests
+  CLOUDINARY_CLOUD_NAME: z.string().min(1).optional(),
+  CLOUDINARY_API_KEY: z.string().min(1).optional(),
+  CLOUDINARY_API_SECRET: z.string().min(1).optional(),
+  CLOUDINARY_URL: z.string().min(1).optional(),
 }).superRefine((values, context) => {
   // In production FRONTEND_APP_URL must be supplied explicitly and use HTTPS.
   if (values.NODE_ENV === 'production' && !process.env['FRONTEND_APP_URL']) {
@@ -84,5 +90,11 @@ export const env = {
   // so no code path tries to deliver mail when the provider is not set up.
   emailConfigured: Boolean(
     parsedEnvironment.data.RESEND_API_KEY && parsedEnvironment.data.EMAIL_FROM,
+  ),
+  cloudinaryConfigured: Boolean(
+    parsedEnvironment.data.CLOUDINARY_URL ||
+      (parsedEnvironment.data.CLOUDINARY_CLOUD_NAME &&
+        parsedEnvironment.data.CLOUDINARY_API_KEY &&
+        parsedEnvironment.data.CLOUDINARY_API_SECRET),
   ),
 }

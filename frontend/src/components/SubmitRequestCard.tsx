@@ -1,20 +1,22 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import {
   Alert,
   Box,
   Button,
   Card,
   CardContent,
+  Chip,
   CircularProgress,
   Divider,
   Grid,
+  LinearProgress,
   MenuItem,
   Paper,
   Stack,
   TextField,
   Typography,
 } from '@mui/material'
-import { createServiceRequest } from '../services/api'
+import { createServiceRequest, uploadIncidentImage } from '../services/api'
 import type { ServiceRequest, UserProfile } from '../types/api'
 
 type SubmitRequestCardProps = {
@@ -61,15 +63,64 @@ export default function SubmitRequestCard({
   const [location, setLocation] = useState('')
   const [description, setDescription] = useState('')
   const [imageUrl, setImageUrl] = useState('')
+  const [uploadMode, setUploadMode] = useState<'upload' | 'url'>('upload')
+  const [uploadingImage, setUploadingImage] = useState(false)
+  const [uploadError, setUploadError] = useState<string | null>(null)
+  const [uploadedFileName, setUploadedFileName] = useState<string | null>(null)
+  const [isDragOver, setIsDragOver] = useState(false)
+  const fileInputRef = useRef<HTMLInputElement>(null)
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [fieldErrors, setFieldErrors] = useState<{ location?: string; description?: string; imageUrl?: string }>({})
   const [createdRequest, setCreatedRequest] = useState<ServiceRequest | null>(null)
   const [copied, setCopied] = useState(false)
 
+  const handleFileProcess = async (file: File) => {
+    if (!token) {
+      setUploadError('Please sign in before uploading images.')
+      return
+    }
+    if (!file) return
+    if (!file.type.startsWith('image/')) {
+      setUploadError('Please select a valid image file (JPEG, PNG, WebP).')
+      return
+    }
+    if (file.size > 10 * 1024 * 1024) {
+      setUploadError('Image size exceeds 10MB limit. Please select a smaller photo.')
+      return
+    }
+
+    setUploadError(null)
+    setUploadingImage(true)
+    setUploadedFileName(file.name)
+
+    const reader = new FileReader()
+    reader.onload = async () => {
+      try {
+        const base64Data = reader.result as string
+        const res = await uploadIncidentImage(token, base64Data)
+        setImageUrl(res.url)
+        if (fieldErrors.imageUrl) {
+          setFieldErrors((prev) => ({ ...prev, imageUrl: undefined }))
+        }
+      } catch (err: unknown) {
+        const msg = err instanceof Error ? err.message : 'Failed to upload photo to Cloudinary'
+        setUploadError(msg)
+        setUploadedFileName(null)
+      } finally {
+        setUploadingImage(false)
+      }
+    }
+    reader.onerror = () => {
+      setUploadError('Failed to read file from your device.')
+      setUploadingImage(false)
+    }
+    reader.readAsDataURL(file)
+  }
+
   if (!token || !user) {
     return (
-      <Paper elevation={0} sx={{ p: { xs: 4, md: 6 }, textAlign: 'center', border: '1px solid #e2e8f0', borderRadius: 4, my: 4, width: '100%' }}>
+      <Paper elevation={0} sx={{ p: { xs: 4, md: 6 }, textAlign: 'center', border: '1px solid #e2e8f0', my: 4, width: '100%' }}>
         <Typography variant="h4" sx={{ fontWeight: 800, mb: 1.5, color: 'primary.main', fontSize: { xs: '1.8rem', md: '2.2rem' } }}>
           Sign In to Submit a Service Request
         </Typography>
@@ -127,6 +178,8 @@ export default function SubmitRequestCard({
       setLocation('')
       setDescription('')
       setImageUrl('')
+      setUploadedFileName(null)
+      setUploadError(null)
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Failed to submit service request'
       const customErr = err as { fieldErrors?: Record<string, string> }
@@ -153,11 +206,10 @@ export default function SubmitRequestCard({
         <Paper
           elevation={0}
           sx={{
-            p: 4,
-            mb: 4,
-            borderRadius: 3,
+            p: 3,
+            mb: 3,
             bgcolor: '#ecfdf5',
-            border: '2px solid #6ee7b7',
+            border: '1.5px solid #6ee7b7',
           }}
         >
           <Stack spacing={2}>
@@ -172,13 +224,13 @@ export default function SubmitRequestCard({
               <Box
                 sx={{
                   bgcolor: '#ffffff',
-                  px: 3,
-                  py: 1.5,
-                  borderRadius: 2,
-                  border: '2px solid #059669',
+                  px: 2.5,
+                  py: 1.2,
+                  borderRadius: '4px',
+                  border: '1.5px solid #059669',
                   fontFamily: 'monospace',
                   fontWeight: 800,
-                  fontSize: '1.35rem',
+                  fontSize: '1.3rem',
                   color: '#065f46',
                 }}
               >
@@ -188,7 +240,7 @@ export default function SubmitRequestCard({
                 variant="contained"
                 size="large"
                 onClick={handleCopyRef}
-                sx={{ bgcolor: '#059669', color: '#ffffff', px: 3, py: 1.4, fontWeight: 700, '&:hover': { bgcolor: '#047857' } }}
+                sx={{ bgcolor: '#059669', color: '#ffffff', px: 3, py: 1.2, fontWeight: 700, '&:hover': { bgcolor: '#047857' } }}
               >
                 {copied ? 'Copied to Clipboard!' : 'Copy Reference'}
               </Button>
@@ -197,7 +249,7 @@ export default function SubmitRequestCard({
         </Paper>
       )}
 
-      <Card sx={{ width: '100%', borderRadius: 4, p: { xs: 2, sm: 3, md: 5 } }}>
+      <Card sx={{ width: '100%', p: { xs: 2, sm: 3, md: 4 } }}>
         <CardContent sx={{ p: 0 }}>
           <Box sx={{ mb: 3.5 }}>
             <Typography variant="h4" sx={{ fontWeight: 800, color: 'text.primary', mb: 1, fontSize: { xs: '1.8rem', md: '2.3rem' } }}>
@@ -213,7 +265,7 @@ export default function SubmitRequestCard({
           <Box component="form" onSubmit={handleSubmit}>
             <Stack spacing={4}>
               {error && (
-                <Alert severity="error" sx={{ borderRadius: 2, fontSize: '1.05rem', py: 1.5 }}>
+                <Alert severity="error" sx={{ fontSize: '1.05rem', py: 1.5 }}>
                   {error}
                 </Alert>
               )}
@@ -255,11 +307,11 @@ export default function SubmitRequestCard({
               </Grid>
 
               {/* Quick location tag suggestions */}
-              <Box sx={{ bgcolor: 'background.default', p: 2.5, borderRadius: 2.5, border: '1px solid', borderColor: 'divider' }}>
-                <Typography variant="subtitle2" sx={{ color: 'text.secondary', fontWeight: 700, mb: 1.2, fontSize: '0.95rem' }}>
+              <Box sx={{ bgcolor: 'background.default', p: 2, borderRadius: '4px', border: '1px solid', borderColor: 'divider' }}>
+                <Typography variant="subtitle2" sx={{ color: 'text.secondary', fontWeight: 700, mb: 1, fontSize: '0.9rem' }}>
                   Quick Fill: Sub-Counties & Wards (Click to insert):
                 </Typography>
-                <Stack direction="row" flexWrap="wrap" gap={1}>
+                <Stack direction="row" flexWrap="wrap" gap={0.8}>
                   {subCountiesAndWards.map((loc) => (
                     <Box
                       key={loc}
@@ -269,11 +321,11 @@ export default function SubmitRequestCard({
                         if (fieldErrors.location) setFieldErrors((p) => ({ ...p, location: undefined }))
                       }}
                       sx={{
-                        fontSize: '0.9rem',
+                        fontSize: '0.85rem',
                         bgcolor: 'background.paper',
-                        px: 1.5,
-                        py: 0.6,
-                        borderRadius: '8px',
+                        px: 1.2,
+                        py: 0.5,
+                        borderRadius: '4px',
                         cursor: 'pointer',
                         color: 'primary.main',
                         fontWeight: 600,
@@ -308,43 +360,246 @@ export default function SubmitRequestCard({
                 error={Boolean(fieldErrors.description) || (description.length > 0 && description.trim().length < 10)}
               />
 
-              <TextField
-                label="Optional Photo Evidence URL"
-                fullWidth
-                value={imageUrl}
-                onChange={(e) => {
-                  setImageUrl(e.target.value)
-                  if (fieldErrors.imageUrl) setFieldErrors((p) => ({ ...p, imageUrl: undefined }))
-                }}
-                placeholder="https://example.com/photos/road-damage.jpg"
-                error={Boolean(fieldErrors.imageUrl)}
-                helperText={fieldErrors.imageUrl || "Provide an image link documenting the issue (e.g. damaged culvert, leaking pipe)"}
-              />
+              {/* Photo Evidence Section */}
+              <Box sx={{ p: 2.5, bgcolor: '#f8fafc', borderRadius: '6px', border: '1px solid #e2e8f0' }}>
+                <Stack direction={{ xs: 'column', sm: 'row' }} justifyContent="space-between" alignItems={{ xs: 'flex-start', sm: 'center' }} spacing={1.5} sx={{ mb: 2 }}>
+                  <Box>
+                    <Typography variant="subtitle1" sx={{ fontWeight: 800, color: 'text.primary', fontSize: '1.05rem' }}>
+                      Incident Photo Evidence (Optional)
+                    </Typography>
+                    <Typography variant="caption" color="text.secondary">
+                      Clear photos help county dispatchers and field inspectors triage faster.
+                    </Typography>
+                  </Box>
 
-              {imageUrl && (
-                <Box
-                  sx={{
-                    p: 2,
-                    border: '2px dashed #cbd5e1',
-                    borderRadius: 3,
-                    textAlign: 'center',
-                    bgcolor: '#f8fafc',
-                  }}
-                >
-                  <Typography variant="subtitle2" color="text.secondary" sx={{ display: 'block', mb: 1.5, fontWeight: 700 }}>
-                    Image Preview:
-                  </Typography>
-                  <Box
-                    component="img"
-                    src={imageUrl}
-                    alt="Preview"
-                    onError={(e) => {
-                      ;(e.target as HTMLImageElement).style.display = 'none'
-                    }}
-                    sx={{ maxHeight: 250, maxWidth: '100%', borderRadius: 2, objectFit: 'cover', boxShadow: '0 4px 12px rgba(0,0,0,0.08)' }}
-                  />
-                </Box>
-              )}
+                  <Stack direction="row" spacing={1}>
+                    <Button
+                      size="small"
+                      variant={uploadMode === 'upload' ? 'contained' : 'outlined'}
+                      onClick={() => setUploadMode('upload')}
+                      sx={{ textTransform: 'none', fontWeight: 700, fontSize: '0.85rem' }}
+                    >
+                      Upload Device Photo
+                    </Button>
+                    <Button
+                      size="small"
+                      variant={uploadMode === 'url' ? 'contained' : 'outlined'}
+                      onClick={() => setUploadMode('url')}
+                      sx={{ textTransform: 'none', fontWeight: 700, fontSize: '0.85rem' }}
+                    >
+                      Paste Image Link
+                    </Button>
+                  </Stack>
+                </Stack>
+
+                {uploadError && (
+                  <Alert severity="error" onClose={() => setUploadError(null)} sx={{ mb: 2, fontSize: '0.95rem' }}>
+                    {uploadError}
+                  </Alert>
+                )}
+
+                {uploadMode === 'upload' ? (
+                  <Box>
+                    <input
+                      type="file"
+                      ref={fileInputRef}
+                      accept="image/*"
+                      style={{ display: 'none' }}
+                      onChange={(e) => {
+                        const file = e.target.files?.[0]
+                        if (file) handleFileProcess(file)
+                        // Reset input value so same file can be re-selected if needed
+                        e.target.value = ''
+                      }}
+                    />
+
+                    {imageUrl ? (
+                      <Box
+                        sx={{
+                          p: 2.5,
+                          bgcolor: '#ffffff',
+                          borderRadius: '6px',
+                          border: '1.5px solid #059669',
+                          textAlign: 'center',
+                        }}
+                      >
+                        <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2.5} alignItems="center">
+                          <Box
+                            component="img"
+                            src={imageUrl}
+                            alt="Uploaded evidence"
+                            onError={(e) => {
+                              ;(e.target as HTMLImageElement).style.display = 'none'
+                            }}
+                            sx={{
+                              width: { xs: '100%', sm: 160 },
+                              height: 120,
+                              borderRadius: '4px',
+                              objectFit: 'cover',
+                              boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                            }}
+                          />
+                          <Stack spacing={1} alignItems={{ xs: 'center', sm: 'flex-start' }} sx={{ flex: 1, minWidth: 0 }}>
+                            <Chip
+                              label="✓ Ready & Optimized with Cloudinary"
+                              size="small"
+                              sx={{ bgcolor: '#ecfdf5', color: '#047857', fontWeight: 700, border: '1px solid #6ee7b7' }}
+                            />
+                            {uploadedFileName && (
+                              <Typography variant="body2" sx={{ fontWeight: 600, color: 'text.primary', wordBreak: 'break-all' }}>
+                                {uploadedFileName}
+                              </Typography>
+                            )}
+                            <Typography variant="caption" color="text.secondary" sx={{ wordBreak: 'break-all' }}>
+                              {imageUrl}
+                            </Typography>
+                            <Stack direction="row" spacing={1.5} sx={{ pt: 0.5 }}>
+                              <Button
+                                size="small"
+                                variant="outlined"
+                                onClick={() => fileInputRef.current?.click()}
+                                disabled={uploadingImage}
+                                sx={{ textTransform: 'none', fontWeight: 700 }}
+                              >
+                                Replace Photo
+                              </Button>
+                              <Button
+                                size="small"
+                                color="error"
+                                variant="text"
+                                onClick={() => {
+                                  setImageUrl('')
+                                  setUploadedFileName(null)
+                                }}
+                                disabled={uploadingImage}
+                                sx={{ textTransform: 'none', fontWeight: 700 }}
+                              >
+                                Remove
+                              </Button>
+                            </Stack>
+                          </Stack>
+                        </Stack>
+                      </Box>
+                    ) : (
+                      <Box
+                        onDragOver={(e) => {
+                          e.preventDefault()
+                          setIsDragOver(true)
+                        }}
+                        onDragLeave={() => setIsDragOver(false)}
+                        onDrop={(e) => {
+                          e.preventDefault()
+                          setIsDragOver(false)
+                          const file = e.dataTransfer.files?.[0]
+                          if (file) handleFileProcess(file)
+                        }}
+                        onClick={() => {
+                          if (!uploadingImage) fileInputRef.current?.click()
+                        }}
+                        sx={{
+                          p: { xs: 3, sm: 4 },
+                          border: '2px dashed',
+                          borderColor: isDragOver ? 'primary.main' : '#cbd5e1',
+                          bgcolor: isDragOver ? '#f0fdf4' : '#ffffff',
+                          borderRadius: '6px',
+                          textAlign: 'center',
+                          cursor: uploadingImage ? 'default' : 'pointer',
+                          transition: 'all 0.2s ease',
+                          '&:hover': {
+                            borderColor: uploadingImage ? '#cbd5e1' : 'primary.main',
+                            bgcolor: uploadingImage ? '#ffffff' : '#f8fafc',
+                          },
+                        }}
+                      >
+                        {uploadingImage ? (
+                          <Stack spacing={2} alignItems="center" sx={{ py: 2 }}>
+                            <CircularProgress size={36} color="primary" />
+                            <Typography variant="body1" sx={{ fontWeight: 700, color: 'primary.main' }}>
+                              Uploading photo to Cloudinary CDN...
+                            </Typography>
+                            <Box sx={{ width: '80%', maxWidth: 300 }}>
+                              <LinearProgress />
+                            </Box>
+                            <Typography variant="caption" color="text.secondary">
+                              Optimizing format and quality for county inspectors...
+                            </Typography>
+                          </Stack>
+                        ) : (
+                          <Stack spacing={1.5} alignItems="center">
+                            <Box
+                              sx={{
+                                width: 54,
+                                height: 54,
+                                borderRadius: '50%',
+                                bgcolor: '#ecfdf5',
+                                color: 'primary.main',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                fontSize: '1.8rem',
+                              }}
+                            >
+                              📷
+                            </Box>
+                            <Typography variant="body1" sx={{ fontWeight: 700, color: 'text.primary' }}>
+                              Click to select photo or drag and drop here
+                            </Typography>
+                            <Typography variant="body2" color="text.secondary">
+                              Supports camera captures, JPG, PNG, WebP up to 10MB
+                            </Typography>
+                            <Button
+                              variant="outlined"
+                              size="medium"
+                              sx={{ textTransform: 'none', fontWeight: 700, mt: 1, pointerEvents: 'none' }}
+                            >
+                              Choose Photo from Device
+                            </Button>
+                          </Stack>
+                        )}
+                      </Box>
+                    )}
+                  </Box>
+                ) : (
+                  <Stack spacing={2}>
+                    <TextField
+                      label="Direct Image URL"
+                      fullWidth
+                      value={imageUrl}
+                      onChange={(e) => {
+                        setImageUrl(e.target.value)
+                        if (fieldErrors.imageUrl) setFieldErrors((p) => ({ ...p, imageUrl: undefined }))
+                      }}
+                      placeholder="https://example.com/photos/road-damage.jpg"
+                      error={Boolean(fieldErrors.imageUrl)}
+                      helperText={fieldErrors.imageUrl || "Provide a direct public image link documenting the issue"}
+                    />
+                    {imageUrl && (
+                      <Box
+                        sx={{
+                          p: 2,
+                          border: '1px solid #e2e8f0',
+                          borderRadius: '4px',
+                          textAlign: 'center',
+                          bgcolor: '#ffffff',
+                        }}
+                      >
+                        <Typography variant="subtitle2" color="text.secondary" sx={{ display: 'block', mb: 1.5, fontWeight: 700 }}>
+                          Image Preview:
+                        </Typography>
+                        <Box
+                          component="img"
+                          src={imageUrl}
+                          alt="Preview"
+                          onError={(e) => {
+                            ;(e.target as HTMLImageElement).style.display = 'none'
+                          }}
+                          sx={{ maxHeight: 200, maxWidth: '100%', borderRadius: '4px', objectFit: 'cover' }}
+                        />
+                      </Box>
+                    )}
+                  </Stack>
+                )}
+              </Box>
 
               <Button
                 type="submit"
@@ -352,9 +607,9 @@ export default function SubmitRequestCard({
                 color="primary"
                 size="large"
                 disabled={submitting}
-                sx={{ py: 1.8, fontWeight: 800, fontSize: '1.18rem', borderRadius: 2.5 }}
+                sx={{ py: 1.5, fontWeight: 800, fontSize: '1.1rem' }}
               >
-                {submitting ? <CircularProgress size={26} color="inherit" /> : 'Submit Request to County Desk'}
+                {submitting ? <CircularProgress size={24} color="inherit" /> : 'Submit Request to County Desk'}
               </Button>
             </Stack>
           </Box>

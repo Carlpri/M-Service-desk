@@ -1,10 +1,39 @@
 import { Router } from 'express'
+import { z } from 'zod'
 import { authenticate, getAuthenticatedUser, requireRole } from '../../middleware/authenticate.js'
 import { UserRole } from '../../generated/prisma/enums.js'
+import { HttpError } from '../../utils/http-error.js'
+import { isCloudinaryConfigured, uploadImageToCloudinary } from '../../utils/cloudinary.js'
 import * as serviceRequestsService from './service-requests.service.js'
 
 export const serviceRequestsRouter = Router()
 export const adminServiceRequestsRouter = Router()
+
+const uploadImageSchema = z.object({
+  image: z.string().min(1, 'Image data is required'),
+})
+
+// Check if Cloudinary upload is configured
+serviceRequestsRouter.get('/upload-status', (_request, response) => {
+  response.status(200).json({
+    configured: isCloudinaryConfigured(),
+  })
+})
+
+// Upload an incident photo directly to Cloudinary
+serviceRequestsRouter.post('/upload-image', authenticate, async (request, response) => {
+  const parseResult = uploadImageSchema.safeParse(request.body)
+  if (!parseResult.success) {
+    throw new HttpError(400, 'INVALID_PAYLOAD', 'Valid image data (base64 or URL) is required')
+  }
+
+  const result = await uploadImageToCloudinary(parseResult.data.image)
+  response.status(200).json({
+    message: 'Image uploaded successfully to Cloudinary',
+    url: result.url,
+    publicId: result.publicId,
+  })
+})
 
 // Citizen Service Request Endpoints
 serviceRequestsRouter.post('/', authenticate, async (request, response) => {

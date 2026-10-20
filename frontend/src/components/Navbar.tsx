@@ -93,7 +93,7 @@ export default function Navbar({
               sx={{
                 width: { xs: 34, sm: 44 },
                 height: { xs: 34, sm: 44 },
-                borderRadius: { xs: '8px', sm: '12px' },
+                borderRadius: '4px',
                 bgcolor: 'primary.main',
                 display: 'flex',
                 alignItems: 'center',
@@ -159,7 +159,7 @@ export default function Navbar({
                   sx={{
                     width: { xs: 32, sm: 36 },
                     height: { xs: 32, sm: 36 },
-                    borderRadius: '8px',
+                    borderRadius: '4px',
                     border: '1px solid',
                     borderColor: 'divider',
                     color: 'text.primary',

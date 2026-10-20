@@ -154,7 +154,7 @@ export default function AuthDialog({ open, onClose, onSuccess }: AuthDialogProps
   }
 
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth PaperProps={{ sx: { borderRadius: 4, p: 1 } }}>
+    <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth PaperProps={{ sx: { p: 1 } }}>
       <DialogTitle sx={{ pb: 1, pt: 2.5, px: 3 }}>
         <Typography variant="h4" sx={{ fontWeight: 800, color: 'primary.main', fontSize: { xs: '1.6rem', md: '2rem' } }}>
           M-Service Desk Authentication
@@ -195,7 +195,7 @@ export default function AuthDialog({ open, onClose, onSuccess }: AuthDialogProps
           <Box component="form" onSubmit={handleLogin} sx={{ mt: 1 }}>
             <Stack spacing={3}>
               {loginError && (
-                <Alert severity="error" sx={{ borderRadius: 2.5, fontSize: '1.05rem', py: 1.5 }}>
+                <Alert severity="error" sx={{ fontSize: '1.05rem', py: 1.5 }}>
                   {loginError}
                 </Alert>
               )}
@@ -250,12 +250,12 @@ export default function AuthDialog({ open, onClose, onSuccess }: AuthDialogProps
           <Box component="form" onSubmit={handleRegister} sx={{ mt: 1 }}>
             <Stack spacing={3}>
               {regError && (
-                <Alert severity="error" sx={{ borderRadius: 2.5, fontSize: '1.05rem', py: 1.5 }}>
+                <Alert severity="error" sx={{ fontSize: '1.05rem', py: 1.5 }}>
                   {regError}
                 </Alert>
               )}
               {regSuccess && (
-                <Alert severity="success" sx={{ borderRadius: 2.5, fontSize: '1.05rem', py: 1.5 }}>
+                <Alert severity="success" sx={{ fontSize: '1.05rem', py: 1.5 }}>
                   {regSuccess}
                 </Alert>
               )}
@@ -317,7 +317,7 @@ export default function AuthDialog({ open, onClose, onSuccess }: AuthDialogProps
                 {regLoading ? <CircularProgress size={26} color="inherit" /> : 'Create Citizen Account'}
               </Button>
 
-              <Alert severity="info" sx={{ fontSize: '0.92rem', borderRadius: 2 }}>
+              <Alert severity="info" sx={{ fontSize: '0.92rem' }}>
                 Note: Public registration automatically assigns the <strong>CITIZEN</strong> role. Privileged administrator accounts are provisioned via separate operational access.
               </Alert>
             </Stack>
@@ -334,7 +334,7 @@ export default function AuthDialog({ open, onClose, onSuccess }: AuthDialogProps
             </Typography>
 
             <Stack spacing={2}>
-              <Box sx={{ p: 2, bgcolor: '#f1f5f9', borderRadius: 2.5 }}>
+              <Box sx={{ p: 2, bgcolor: '#f1f5f9', borderRadius: '4px' }}>
                 <Typography variant="subtitle2" sx={{ fontWeight: 800, display: 'block', color: 'primary.dark', fontSize: '1.05rem' }}>
                   1. Opaque Session Tokens
                 </Typography>
@@ -343,7 +343,7 @@ export default function AuthDialog({ open, onClose, onSuccess }: AuthDialogProps
                 </Typography>
               </Box>
 
-              <Box sx={{ p: 2, bgcolor: '#f1f5f9', borderRadius: 2.5 }}>
+              <Box sx={{ p: 2, bgcolor: '#f1f5f9', borderRadius: '4px' }}>
                 <Typography variant="subtitle2" sx={{ fontWeight: 800, display: 'block', color: 'primary.dark', fontSize: '1.05rem' }}>
                   2. Role Enforcement
                 </Typography>
@@ -352,7 +352,7 @@ export default function AuthDialog({ open, onClose, onSuccess }: AuthDialogProps
                 </Typography>
               </Box>
 
-              <Box sx={{ p: 2, bgcolor: '#f1f5f9', borderRadius: 2.5 }}>
+              <Box sx={{ p: 2, bgcolor: '#f1f5f9', borderRadius: '4px' }}>
                 <Typography variant="subtitle2" sx={{ fontWeight: 800, display: 'block', color: 'primary.dark', fontSize: '1.05rem' }}>
                   3. Session Invalidation
                 </Typography>

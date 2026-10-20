@@ -215,7 +215,6 @@ export default function AdminDashboard({ token, user, onOpenAuth }: AdminDashboa
           textAlign: 'center',
           border: '1px solid',
           borderColor: 'divider',
-          borderRadius: 4,
           my: 4,
           bgcolor: 'background.paper',
           width: '100%',
@@ -241,8 +240,7 @@ export default function AdminDashboard({ token, user, onOpenAuth }: AdminDashboa
         sx={{
           p: { xs: 4, md: 6 },
           textAlign: 'center',
-          border: '2px solid #fed7aa',
-          borderRadius: 4,
+          border: '1px solid #fed7aa',
           my: 4,
           bgcolor: '#fffbeb',
           width: '100%',
@@ -258,7 +256,7 @@ export default function AdminDashboard({ token, user, onOpenAuth }: AdminDashboa
     )
   }
 
-  // Sidebar content component (AeuxGlobal inspired dark-green navigation)
+  // Sidebar content component (AeuxGlobal inspired dark-green navigation with 8px radius)
   const sidebarContent = (
     <Box
       sx={{
@@ -269,8 +267,8 @@ export default function AdminDashboard({ token, user, onOpenAuth }: AdminDashboa
         display: 'flex',
         flexDirection: 'column',
         p: 2.5,
-        borderRadius: { xs: 0, md: '20px' },
-        boxShadow: '0 8px 32px rgba(0, 65, 46, 0.25)',
+        borderRadius: { xs: 0, md: '4px' },
+        boxShadow: '0 4px 20px rgba(0, 65, 46, 0.2)',
       }}
     >
       {/* Brand & Workspace Title */}
@@ -278,22 +276,22 @@ export default function AdminDashboard({ token, user, onOpenAuth }: AdminDashboa
         <Stack direction="row" alignItems="center" spacing={1.5}>
           <Box
             sx={{
-              width: 40,
-              height: 40,
-              borderRadius: '10px',
+              width: 38,
+              height: 38,
+              borderRadius: '4px',
               bgcolor: '#96BF8A',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               color: '#00261A',
               fontWeight: 900,
-              fontSize: '1.3rem',
+              fontSize: '1.25rem',
             }}
           >
             M
           </Box>
           <Box>
-            <Typography variant="h6" sx={{ fontWeight: 900, color: '#FFFFFF', fontSize: '1.1rem', lineHeight: 1.2 }}>
+            <Typography variant="h6" sx={{ fontWeight: 900, color: '#FFFFFF', fontSize: '1.08rem', lineHeight: 1.2 }}>
               M-Service Desk
             </Typography>
             <Typography variant="caption" sx={{ color: '#96BF8A', fontWeight: 600, fontSize: '0.75rem' }}>
@@ -305,15 +303,15 @@ export default function AdminDashboard({ token, user, onOpenAuth }: AdminDashboa
         <Box
           sx={{
             bgcolor: 'rgba(255, 255, 255, 0.08)',
-            p: 1.5,
-            borderRadius: '10px',
+            p: 1.2,
+            borderRadius: '4px',
             border: '1px solid rgba(150, 191, 138, 0.2)',
           }}
         >
-          <Typography variant="caption" sx={{ color: '#96BF8A', fontWeight: 700, textTransform: 'uppercase', fontSize: '0.68rem', display: 'block', mb: 0.3 }}>
+          <Typography variant="caption" sx={{ color: '#96BF8A', fontWeight: 700, textTransform: 'uppercase', fontSize: '0.68rem', display: 'block', mb: 0.2 }}>
             Operational Workspace
           </Typography>
-          <Typography variant="body2" sx={{ fontWeight: 700, color: '#FFFFFF', fontSize: '0.88rem' }}>
+          <Typography variant="body2" sx={{ fontWeight: 700, color: '#FFFFFF', fontSize: '0.85rem' }}>
             County Central Operations
           </Typography>
         </Box>
@@ -324,7 +322,7 @@ export default function AdminDashboard({ token, user, onOpenAuth }: AdminDashboa
         Navigation
       </Typography>
 
-      <List sx={{ p: 0, flexGrow: 1, display: 'flex', flexDirection: 'column', gap: 0.6 }}>
+      <List sx={{ p: 0, flexGrow: 1, display: 'flex', flexDirection: 'column', gap: 0.5 }}>
         <ListItemButton
           selected={activeSection === 'overview'}
           onClick={() => {
@@ -332,9 +330,9 @@ export default function AdminDashboard({ token, user, onOpenAuth }: AdminDashboa
             if (isMobile) setMobileDrawerOpen(false)
           }}
           sx={{
-            borderRadius: '10px',
-            py: 1.2,
-            px: 1.5,
+            borderRadius: '4px',
+            py: 1.1,
+            px: 1.4,
             color: activeSection === 'overview' ? '#00261A' : 'rgba(255,255,255,0.85)',
             bgcolor: activeSection === 'overview' ? '#96BF8A' : 'transparent',
             '&:hover': {
@@ -342,10 +340,10 @@ export default function AdminDashboard({ token, user, onOpenAuth }: AdminDashboa
             },
           }}
         >
-          <ListItemIcon sx={{ minWidth: 34, color: activeSection === 'overview' ? '#00261A' : '#96BF8A', fontSize: '1.2rem' }}>
+          <ListItemIcon sx={{ minWidth: 32, color: activeSection === 'overview' ? '#00261A' : '#96BF8A', fontSize: '1.15rem' }}>
             📊
           </ListItemIcon>
-          <ListItemText primary="Dashboard Overview" primaryTypographyProps={{ fontSize: '0.92rem', fontWeight: 700 }} />
+          <ListItemText primary="Dashboard Overview" primaryTypographyProps={{ fontSize: '0.9rem', fontWeight: 700 }} />
         </ListItemButton>
 
         <ListItemButton
@@ -356,9 +354,9 @@ export default function AdminDashboard({ token, user, onOpenAuth }: AdminDashboa
             if (isMobile) setMobileDrawerOpen(false)
           }}
           sx={{
-            borderRadius: '10px',
-            py: 1.2,
-            px: 1.5,
+            borderRadius: '4px',
+            py: 1.1,
+            px: 1.4,
             color: activeSection === 'requests' ? '#00261A' : 'rgba(255,255,255,0.85)',
             bgcolor: activeSection === 'requests' ? '#96BF8A' : 'transparent',
             '&:hover': {
@@ -366,10 +364,10 @@ export default function AdminDashboard({ token, user, onOpenAuth }: AdminDashboa
             },
           }}
         >
-          <ListItemIcon sx={{ minWidth: 34, color: activeSection === 'requests' ? '#00261A' : '#96BF8A', fontSize: '1.2rem' }}>
+          <ListItemIcon sx={{ minWidth: 32, color: activeSection === 'requests' ? '#00261A' : '#96BF8A', fontSize: '1.15rem' }}>
             📋
           </ListItemIcon>
-          <ListItemText primary="All Service Requests" primaryTypographyProps={{ fontSize: '0.92rem', fontWeight: 700 }} />
+          <ListItemText primary="All Service Requests" primaryTypographyProps={{ fontSize: '0.9rem', fontWeight: 700 }} />
           {analytics && (
             <Chip
               size="small"
@@ -378,8 +376,8 @@ export default function AdminDashboard({ token, user, onOpenAuth }: AdminDashboa
                 bgcolor: activeSection === 'requests' ? '#00412E' : 'rgba(255,255,255,0.15)',
                 color: activeSection === 'requests' ? '#FFFFFF' : '#96BF8A',
                 fontWeight: 800,
-                fontSize: '0.75rem',
-                height: 22,
+                fontSize: '0.72rem',
+                height: 20,
               }}
             />
           )}
@@ -392,20 +390,20 @@ export default function AdminDashboard({ token, user, onOpenAuth }: AdminDashboa
             if (isMobile) setMobileDrawerOpen(false)
           }}
           sx={{
-            borderRadius: '10px',
-            py: 1,
-            px: 1.5,
-            pl: 3.5,
+            borderRadius: '4px',
+            py: 0.9,
+            px: 1.4,
+            pl: 3.2,
             color: 'rgba(255,255,255,0.78)',
             '&:hover': { bgcolor: 'rgba(255,255,255,0.06)' },
           }}
         >
-          <ListItemText primary="⏳ Pending Triage" primaryTypographyProps={{ fontSize: '0.85rem', fontWeight: 600 }} />
+          <ListItemText primary="⏳ Pending Triage" primaryTypographyProps={{ fontSize: '0.84rem', fontWeight: 600 }} />
           {analytics && analytics.pending > 0 && (
             <Chip
               size="small"
               label={analytics.pending}
-              sx={{ bgcolor: '#D97706', color: '#FFFFFF', fontWeight: 800, fontSize: '0.72rem', height: 20 }}
+              sx={{ bgcolor: '#D97706', color: '#FFFFFF', fontWeight: 800, fontSize: '0.7rem', height: 18 }}
             />
           )}
         </ListItemButton>
@@ -417,20 +415,20 @@ export default function AdminDashboard({ token, user, onOpenAuth }: AdminDashboa
             if (isMobile) setMobileDrawerOpen(false)
           }}
           sx={{
-            borderRadius: '10px',
-            py: 1,
-            px: 1.5,
-            pl: 3.5,
+            borderRadius: '4px',
+            py: 0.9,
+            px: 1.4,
+            pl: 3.2,
             color: 'rgba(255,255,255,0.78)',
             '&:hover': { bgcolor: 'rgba(255,255,255,0.06)' },
           }}
         >
-          <ListItemText primary="⚡ Active Fieldwork" primaryTypographyProps={{ fontSize: '0.85rem', fontWeight: 600 }} />
+          <ListItemText primary="⚡ Active Fieldwork" primaryTypographyProps={{ fontSize: '0.84rem', fontWeight: 600 }} />
           {analytics && analytics.inProgress > 0 && (
             <Chip
               size="small"
               label={analytics.inProgress}
-              sx={{ bgcolor: '#96BF8A', color: '#00261A', fontWeight: 800, fontSize: '0.72rem', height: 20 }}
+              sx={{ bgcolor: '#96BF8A', color: '#00261A', fontWeight: 800, fontSize: '0.7rem', height: 18 }}
             />
           )}
         </ListItemButton>
@@ -442,15 +440,15 @@ export default function AdminDashboard({ token, user, onOpenAuth }: AdminDashboa
             if (isMobile) setMobileDrawerOpen(false)
           }}
           sx={{
-            borderRadius: '10px',
-            py: 1,
-            px: 1.5,
-            pl: 3.5,
+            borderRadius: '4px',
+            py: 0.9,
+            px: 1.4,
+            pl: 3.2,
             color: 'rgba(255,255,255,0.78)',
             '&:hover': { bgcolor: 'rgba(255,255,255,0.06)' },
           }}
         >
-          <ListItemText primary="✅ Resolved Requests" primaryTypographyProps={{ fontSize: '0.85rem', fontWeight: 600 }} />
+          <ListItemText primary="✅ Resolved Requests" primaryTypographyProps={{ fontSize: '0.84rem', fontWeight: 600 }} />
         </ListItemButton>
 
         <ListItemButton
@@ -460,9 +458,9 @@ export default function AdminDashboard({ token, user, onOpenAuth }: AdminDashboa
             if (isMobile) setMobileDrawerOpen(false)
           }}
           sx={{
-            borderRadius: '10px',
-            py: 1.2,
-            px: 1.5,
+            borderRadius: '4px',
+            py: 1.1,
+            px: 1.4,
             color: activeSection === 'analytics' ? '#00261A' : 'rgba(255,255,255,0.85)',
             bgcolor: activeSection === 'analytics' ? '#96BF8A' : 'transparent',
             '&:hover': {
@@ -470,10 +468,10 @@ export default function AdminDashboard({ token, user, onOpenAuth }: AdminDashboa
             },
           }}
         >
-          <ListItemIcon sx={{ minWidth: 34, color: activeSection === 'analytics' ? '#00261A' : '#96BF8A', fontSize: '1.2rem' }}>
+          <ListItemIcon sx={{ minWidth: 32, color: activeSection === 'analytics' ? '#00261A' : '#96BF8A', fontSize: '1.15rem' }}>
             📈
           </ListItemIcon>
-          <ListItemText primary="Sector Reports" primaryTypographyProps={{ fontSize: '0.92rem', fontWeight: 700 }} />
+          <ListItemText primary="Sector Reports" primaryTypographyProps={{ fontSize: '0.9rem', fontWeight: 700 }} />
         </ListItemButton>
 
         <ListItemButton
@@ -483,9 +481,9 @@ export default function AdminDashboard({ token, user, onOpenAuth }: AdminDashboa
             if (isMobile) setMobileDrawerOpen(false)
           }}
           sx={{
-            borderRadius: '10px',
-            py: 1.2,
-            px: 1.5,
+            borderRadius: '4px',
+            py: 1.1,
+            px: 1.4,
             color: activeSection === 'citizens' ? '#00261A' : 'rgba(255,255,255,0.85)',
             bgcolor: activeSection === 'citizens' ? '#96BF8A' : 'transparent',
             '&:hover': {
@@ -493,41 +491,41 @@ export default function AdminDashboard({ token, user, onOpenAuth }: AdminDashboa
             },
           }}
         >
-          <ListItemIcon sx={{ minWidth: 34, color: activeSection === 'citizens' ? '#00261A' : '#96BF8A', fontSize: '1.2rem' }}>
+          <ListItemIcon sx={{ minWidth: 32, color: activeSection === 'citizens' ? '#00261A' : '#96BF8A', fontSize: '1.15rem' }}>
             👥
           </ListItemIcon>
-          <ListItemText primary="Registered Citizens" primaryTypographyProps={{ fontSize: '0.92rem', fontWeight: 700 }} />
+          <ListItemText primary="Registered Citizens" primaryTypographyProps={{ fontSize: '0.9rem', fontWeight: 700 }} />
           {users.length > 0 && (
             <Chip
               size="small"
               label={users.length}
-              sx={{ bgcolor: 'rgba(255,255,255,0.15)', color: '#96BF8A', fontWeight: 700, fontSize: '0.72rem', height: 20 }}
+              sx={{ bgcolor: 'rgba(255,255,255,0.15)', color: '#96BF8A', fontWeight: 700, fontSize: '0.7rem', height: 18 }}
             />
           )}
         </ListItemButton>
       </List>
 
       {/* Admin User Footer (AeuxGlobal User Account style) */}
-      <Divider sx={{ my: 2, borderColor: 'rgba(150, 191, 138, 0.2)' }} />
+      <Divider sx={{ my: 1.8, borderColor: 'rgba(150, 191, 138, 0.2)' }} />
 
-      <Stack direction="row" alignItems="center" spacing={1.5} sx={{ p: 1, bgcolor: 'rgba(255,255,255,0.05)', borderRadius: '12px' }}>
+      <Stack direction="row" alignItems="center" spacing={1.5} sx={{ p: 1, bgcolor: 'rgba(255,255,255,0.05)', borderRadius: '4px' }}>
         <Avatar
           sx={{
             bgcolor: '#96BF8A',
             color: '#00261A',
             fontWeight: 800,
-            width: 38,
-            height: 38,
-            fontSize: '0.95rem',
+            width: 36,
+            height: 36,
+            fontSize: '0.9rem',
           }}
         >
           {user.name.charAt(0).toUpperCase()}
         </Avatar>
         <Box sx={{ overflow: 'hidden', flexGrow: 1 }}>
-          <Typography variant="body2" noWrap sx={{ fontWeight: 800, color: '#FFFFFF', fontSize: '0.88rem' }}>
+          <Typography variant="body2" noWrap sx={{ fontWeight: 800, color: '#FFFFFF', fontSize: '0.85rem' }}>
             {user.name}
           </Typography>
-          <Typography variant="caption" noWrap sx={{ color: '#96BF8A', fontSize: '0.75rem', display: 'block' }}>
+          <Typography variant="caption" noWrap sx={{ color: '#96BF8A', fontSize: '0.72rem', display: 'block' }}>
             {user.email}
           </Typography>
         </Box>
@@ -547,7 +545,7 @@ export default function AdminDashboard({ token, user, onOpenAuth }: AdminDashboa
   )
 
   return (
-    <Box sx={{ width: '100%', display: 'flex', gap: { xs: 0, md: 3 }, minHeight: 'calc(100vh - 120px)' }}>
+    <Box sx={{ width: '100%', display: 'flex', gap: { xs: 0, md: 2.5 }, minHeight: 'calc(100vh - 120px)' }}>
       {/* Desktop Left Sidebar */}
       {!isMobile && (
         <Box sx={{ flexShrink: 0 }}>
@@ -568,17 +566,9 @@ export default function AdminDashboard({ token, user, onOpenAuth }: AdminDashboa
       )}
 
       {/* Main Administrative Content Area */}
-      <Box sx={{ flexGrow: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 3 }}>
+      <Box sx={{ flexGrow: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 2.5 }}>
         {/* Top Header Card */}
-        <Card
-          sx={{
-            p: { xs: 2, sm: 2.5 },
-            bgcolor: '#FFFFFF',
-            borderRadius: 3.5,
-            border: '1px solid rgba(0, 65, 46, 0.08)',
-            boxShadow: '0 2px 10px rgba(0, 65, 46, 0.03)',
-          }}
-        >
+        <Card sx={{ p: { xs: 2, sm: 2.5 } }}>
           <Stack
             direction={{ xs: 'column', sm: 'row' }}
             justifyContent="space-between"
@@ -593,7 +583,7 @@ export default function AdminDashboard({ token, user, onOpenAuth }: AdminDashboa
                   sx={{
                     bgcolor: '#00412E',
                     color: '#FFFFFF',
-                    borderRadius: '8px',
+                    borderRadius: '4px',
                     '&:hover': { bgcolor: '#002C1F' },
                   }}
                 >
@@ -605,13 +595,13 @@ export default function AdminDashboard({ token, user, onOpenAuth }: AdminDashboa
                 </IconButton>
               )}
               <Box>
-                <Typography variant="h5" sx={{ fontWeight: 900, color: '#00412E', fontSize: { xs: '1.4rem', sm: '1.7rem' } }}>
+                <Typography variant="h5" sx={{ fontWeight: 900, color: '#00412E', fontSize: { xs: '1.35rem', sm: '1.65rem' } }}>
                   {activeSection === 'overview' && 'Executive Operations Dashboard'}
                   {activeSection === 'requests' && 'Citizen Service Requests Triage'}
                   {activeSection === 'analytics' && 'County Sector Analytics & Performance'}
                   {activeSection === 'citizens' && 'Registered Citizens & Users Directory'}
                 </Typography>
-                <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.9rem' }}>
+                <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.88rem' }}>
                   Murang'a County Public Service Request & Administration Portal
                 </Typography>
               </Box>
@@ -632,7 +622,6 @@ export default function AdminDashboard({ token, user, onOpenAuth }: AdminDashboa
                     fontWeight: 700,
                     borderColor: 'rgba(0, 65, 46, 0.25)',
                     color: '#00412E',
-                    borderRadius: 2,
                     px: 2,
                     py: 0.8,
                   }}
@@ -649,7 +638,7 @@ export default function AdminDashboard({ token, user, onOpenAuth }: AdminDashboa
           <Alert
             severity="error"
             onClose={() => setDashboardError(null)}
-            sx={{ borderRadius: 3, fontSize: '1rem', py: 1.2 }}
+            sx={{ fontSize: '0.95rem', py: 1 }}
           >
             {dashboardError}
           </Alert>
@@ -659,7 +648,7 @@ export default function AdminDashboard({ token, user, onOpenAuth }: AdminDashboa
           <Alert
             severity="success"
             onClose={() => setSuccessMessage(null)}
-            sx={{ borderRadius: 3, fontSize: '1rem', py: 1.2 }}
+            sx={{ fontSize: '0.95rem', py: 1 }}
           >
             {successMessage}
           </Alert>
@@ -678,7 +667,7 @@ export default function AdminDashboard({ token, user, onOpenAuth }: AdminDashboa
                   sm: 'repeat(2, 1fr)',
                   lg: 'repeat(4, 1fr)',
                 },
-                gap: 2.5,
+                gap: 2,
               }}
             >
               {/* Card 1: Air Pollution style dark hero card */}
@@ -686,34 +675,32 @@ export default function AdminDashboard({ token, user, onOpenAuth }: AdminDashboa
                 sx={{
                   bgcolor: '#00412E', // Brand Primary Dark Green
                   color: '#FFFFFF',
-                  p: 2.5,
-                  borderRadius: 3.5,
+                  p: 2.2,
                   position: 'relative',
                   overflow: 'hidden',
-                  boxShadow: '0 8px 24px rgba(0, 65, 46, 0.16)',
+                  boxShadow: '0 4px 16px rgba(0, 65, 46, 0.16)',
                 }}
               >
-                <Stack spacing={1}>
+                <Stack spacing={0.8}>
                   <Stack direction="row" justifyContent="space-between" alignItems="center">
-                    <Typography variant="caption" sx={{ color: '#96BF8A', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.06em', fontSize: '0.75rem' }}>
+                    <Typography variant="caption" sx={{ color: '#96BF8A', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.06em', fontSize: '0.72rem' }}>
                       Total Intake
                     </Typography>
                     <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: '#96BF8A' }} />
                   </Stack>
-                  <Typography variant="h3" sx={{ fontWeight: 900, color: '#FFFFFF', fontSize: { xs: '2.4rem', md: '2.9rem' }, lineHeight: 1 }}>
-                    {analyticsLoading ? <CircularProgress size={28} sx={{ color: '#FFFFFF' }} /> : analytics?.total ?? 0}
+                  <Typography variant="h3" sx={{ fontWeight: 900, color: '#FFFFFF', fontSize: { xs: '2.2rem', md: '2.7rem' }, lineHeight: 1 }}>
+                    {analyticsLoading ? <CircularProgress size={26} sx={{ color: '#FFFFFF' }} /> : analytics?.total ?? 0}
                   </Typography>
-                  <Typography variant="caption" sx={{ color: 'rgba(255, 255, 255, 0.8)', fontSize: '0.8rem' }}>
+                  <Typography variant="caption" sx={{ color: 'rgba(255, 255, 255, 0.8)', fontSize: '0.78rem' }}>
                     Public requests across all 8 sub-counties
                   </Typography>
-                  {/* Mini visual indicator */}
-                  <Box sx={{ pt: 1 }}>
+                  <Box sx={{ pt: 0.8 }}>
                     <LinearProgress
                       variant="determinate"
                       value={100}
                       sx={{
-                        height: 6,
-                        borderRadius: 3,
+                        height: 5,
+                        borderRadius: 1,
                         bgcolor: 'rgba(255, 255, 255, 0.15)',
                         '& .MuiLinearProgress-bar': { bgcolor: '#96BF8A' },
                       }}
@@ -729,38 +716,36 @@ export default function AdminDashboard({ token, user, onOpenAuth }: AdminDashboa
                   setStatusFilter('PENDING')
                 }}
                 sx={{
-                  bgcolor: '#FFFFFF',
-                  p: 2.5,
-                  borderRadius: 3.5,
+                  p: 2.2,
                   cursor: 'pointer',
-                  border: '1px solid rgba(217, 119, 6, 0.2)',
-                  transition: 'transform 0.18s ease, box-shadow 0.18s ease',
+                  border: '1px solid rgba(217, 119, 6, 0.25)',
+                  transition: 'transform 0.15s ease, box-shadow 0.15s ease',
                   '&:hover': {
                     transform: 'translateY(-2px)',
-                    boxShadow: '0 8px 20px rgba(217, 119, 6, 0.12)',
+                    boxShadow: '0 6px 16px rgba(217, 119, 6, 0.12)',
                   },
                 }}
               >
-                <Stack spacing={1}>
+                <Stack spacing={0.8}>
                   <Stack direction="row" justifyContent="space-between" alignItems="center">
-                    <Typography variant="caption" sx={{ color: '#D97706', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.06em', fontSize: '0.75rem' }}>
+                    <Typography variant="caption" sx={{ color: '#D97706', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.06em', fontSize: '0.72rem' }}>
                       Pending Triage
                     </Typography>
-                    <Chip size="small" label="Awaiting Action" sx={{ bgcolor: '#FEF3C7', color: '#B45309', fontWeight: 800, fontSize: '0.7rem', height: 20 }} />
+                    <Chip size="small" label="Awaiting Action" sx={{ bgcolor: '#FEF3C7', color: '#B45309', fontWeight: 800, fontSize: '0.68rem', height: 18 }} />
                   </Stack>
-                  <Typography variant="h3" sx={{ fontWeight: 900, color: '#D97706', fontSize: { xs: '2.4rem', md: '2.9rem' }, lineHeight: 1 }}>
-                    {analyticsLoading ? <CircularProgress size={28} sx={{ color: '#D97706' }} /> : analytics?.pending ?? 0}
+                  <Typography variant="h3" sx={{ fontWeight: 900, color: '#D97706', fontSize: { xs: '2.2rem', md: '2.7rem' }, lineHeight: 1 }}>
+                    {analyticsLoading ? <CircularProgress size={26} sx={{ color: '#D97706' }} /> : analytics?.pending ?? 0}
                   </Typography>
-                  <Typography variant="caption" sx={{ color: 'text.secondary', fontSize: '0.8rem' }}>
+                  <Typography variant="caption" sx={{ color: 'text.secondary', fontSize: '0.78rem' }}>
                     New incident submissions awaiting department dispatch
                   </Typography>
-                  <Box sx={{ pt: 1 }}>
+                  <Box sx={{ pt: 0.8 }}>
                     <LinearProgress
                       variant="determinate"
                       value={analytics?.total ? ((analytics.pending / analytics.total) * 100) : 0}
                       sx={{
-                        height: 6,
-                        borderRadius: 3,
+                        height: 5,
+                        borderRadius: 1,
                         bgcolor: '#FEF3C7',
                         '& .MuiLinearProgress-bar': { bgcolor: '#D97706' },
                       }}
@@ -776,38 +761,36 @@ export default function AdminDashboard({ token, user, onOpenAuth }: AdminDashboa
                   setStatusFilter('IN_PROGRESS')
                 }}
                 sx={{
-                  bgcolor: '#FFFFFF',
-                  p: 2.5,
-                  borderRadius: 3.5,
+                  p: 2.2,
                   cursor: 'pointer',
-                  border: '1px solid rgba(0, 65, 46, 0.18)',
-                  transition: 'transform 0.18s ease, box-shadow 0.18s ease',
+                  border: '1px solid rgba(0, 65, 46, 0.2)',
+                  transition: 'transform 0.15s ease, box-shadow 0.15s ease',
                   '&:hover': {
                     transform: 'translateY(-2px)',
-                    boxShadow: '0 8px 20px rgba(0, 65, 46, 0.08)',
+                    boxShadow: '0 6px 16px rgba(0, 65, 46, 0.08)',
                   },
                 }}
               >
-                <Stack spacing={1}>
+                <Stack spacing={0.8}>
                   <Stack direction="row" justifyContent="space-between" alignItems="center">
-                    <Typography variant="caption" sx={{ color: '#00412E', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.06em', fontSize: '0.75rem' }}>
+                    <Typography variant="caption" sx={{ color: '#00412E', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.06em', fontSize: '0.72rem' }}>
                       Active Fieldwork
                     </Typography>
-                    <Chip size="small" label="In Progress" sx={{ bgcolor: '#E6F0EB', color: '#00412E', fontWeight: 800, fontSize: '0.7rem', height: 20 }} />
+                    <Chip size="small" label="In Progress" sx={{ bgcolor: '#E6F0EB', color: '#00412E', fontWeight: 800, fontSize: '0.68rem', height: 18 }} />
                   </Stack>
-                  <Typography variant="h3" sx={{ fontWeight: 900, color: '#00412E', fontSize: { xs: '2.4rem', md: '2.9rem' }, lineHeight: 1 }}>
-                    {analyticsLoading ? <CircularProgress size={28} sx={{ color: '#00412E' }} /> : analytics?.inProgress ?? 0}
+                  <Typography variant="h3" sx={{ fontWeight: 900, color: '#00412E', fontSize: { xs: '2.2rem', md: '2.7rem' }, lineHeight: 1 }}>
+                    {analyticsLoading ? <CircularProgress size={26} sx={{ color: '#00412E' }} /> : analytics?.inProgress ?? 0}
                   </Typography>
-                  <Typography variant="caption" sx={{ color: 'text.secondary', fontSize: '0.8rem' }}>
+                  <Typography variant="caption" sx={{ color: 'text.secondary', fontSize: '0.78rem' }}>
                     County engineering and maintenance crews on-site
                   </Typography>
-                  <Box sx={{ pt: 1 }}>
+                  <Box sx={{ pt: 0.8 }}>
                     <LinearProgress
                       variant="determinate"
                       value={analytics?.total ? ((analytics.inProgress / analytics.total) * 100) : 0}
                       sx={{
-                        height: 6,
-                        borderRadius: 3,
+                        height: 5,
+                        borderRadius: 1,
                         bgcolor: '#E6F0EB',
                         '& .MuiLinearProgress-bar': { bgcolor: '#00412E' },
                       }}
@@ -823,38 +806,37 @@ export default function AdminDashboard({ token, user, onOpenAuth }: AdminDashboa
                   setStatusFilter('RESOLVED')
                 }}
                 sx={{
-                  bgcolor: '#F3F6F2', // Subtle sage tint
-                  p: 2.5,
-                  borderRadius: 3.5,
+                  bgcolor: '#F3F6F2',
+                  p: 2.2,
                   cursor: 'pointer',
                   border: '1px solid #96BF8A',
-                  transition: 'transform 0.18s ease, box-shadow 0.18s ease',
+                  transition: 'transform 0.15s ease, box-shadow 0.15s ease',
                   '&:hover': {
                     transform: 'translateY(-2px)',
-                    boxShadow: '0 8px 20px rgba(150, 191, 138, 0.2)',
+                    boxShadow: '0 6px 16px rgba(150, 191, 138, 0.2)',
                   },
                 }}
               >
-                <Stack spacing={1}>
+                <Stack spacing={0.8}>
                   <Stack direction="row" justifyContent="space-between" alignItems="center">
-                    <Typography variant="caption" sx={{ color: '#00412E', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.06em', fontSize: '0.75rem' }}>
+                    <Typography variant="caption" sx={{ color: '#00412E', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.06em', fontSize: '0.72rem' }}>
                       Resolution Rate
                     </Typography>
-                    <Chip size="small" label="✓ Resolved" sx={{ bgcolor: '#DCFCE7', color: '#15803D', fontWeight: 800, fontSize: '0.7rem', height: 20 }} />
+                    <Chip size="small" label="✓ Resolved" sx={{ bgcolor: '#DCFCE7', color: '#15803D', fontWeight: 800, fontSize: '0.68rem', height: 18 }} />
                   </Stack>
-                  <Typography variant="h3" sx={{ fontWeight: 900, color: '#15803D', fontSize: { xs: '2.4rem', md: '2.9rem' }, lineHeight: 1 }}>
-                    {analyticsLoading ? <CircularProgress size={28} sx={{ color: '#15803D' }} /> : `${resolutionRate}%`}
+                  <Typography variant="h3" sx={{ fontWeight: 900, color: '#15803D', fontSize: { xs: '2.2rem', md: '2.7rem' }, lineHeight: 1 }}>
+                    {analyticsLoading ? <CircularProgress size={26} sx={{ color: '#15803D' }} /> : `${resolutionRate}%`}
                   </Typography>
-                  <Typography variant="caption" sx={{ color: 'text.secondary', fontSize: '0.8rem' }}>
+                  <Typography variant="caption" sx={{ color: 'text.secondary', fontSize: '0.78rem' }}>
                     {analytics?.resolved ?? 0} resolved of {analytics?.total ?? 0} total requests
                   </Typography>
-                  <Box sx={{ pt: 1 }}>
+                  <Box sx={{ pt: 0.8 }}>
                     <LinearProgress
                       variant="determinate"
                       value={resolutionRate}
                       sx={{
-                        height: 6,
-                        borderRadius: 3,
+                        height: 5,
+                        borderRadius: 1,
                         bgcolor: 'rgba(21, 128, 61, 0.12)',
                         '& .MuiLinearProgress-bar': { bgcolor: '#15803D' },
                       }}
@@ -864,64 +846,57 @@ export default function AdminDashboard({ token, user, onOpenAuth }: AdminDashboa
               </Card>
             </Box>
 
-            {/* Middle Section: Sector Analytics & Pipeline Breakdown (AeuxGlobal inspired) */}
+            {/* Middle Section: Sector Analytics & Pipeline Breakdown */}
             <Box
               sx={{
                 display: 'grid',
                 gridTemplateColumns: { xs: '1fr', lg: '7fr 5fr' },
-                gap: 2.5,
+                gap: 2,
               }}
             >
-              {/* Sector Breakdown Card (Like Plastic Recycling by Region in reference) */}
-              <Card
-                sx={{
-                  p: 3,
-                  bgcolor: '#FFFFFF',
-                  borderRadius: 3.5,
-                  boxShadow: '0 4px 18px rgba(0, 65, 46, 0.04)',
-                }}
-              >
-                <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 2.5 }}>
+              {/* Sector Breakdown Card */}
+              <Card sx={{ p: 2.5 }}>
+                <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 2 }}>
                   <Box>
-                    <Typography variant="h6" sx={{ fontWeight: 900, color: '#00412E', fontSize: '1.2rem' }}>
+                    <Typography variant="h6" sx={{ fontWeight: 900, color: '#00412E', fontSize: '1.15rem' }}>
                       Public Requests by County Sector
                     </Typography>
-                    <Typography variant="caption" color="text.secondary" sx={{ fontSize: '0.82rem' }}>
+                    <Typography variant="caption" color="text.secondary" sx={{ fontSize: '0.8rem' }}>
                       Distribution across Murang'a County departments
                     </Typography>
                   </Box>
                   <Chip
                     size="small"
                     label={`${analytics?.byCategory?.length || 0} Sectors Active`}
-                    sx={{ bgcolor: '#E8EAE5', color: '#00412E', fontWeight: 800, fontSize: '0.75rem' }}
+                    sx={{ bgcolor: '#E8EAE5', color: '#00412E', fontWeight: 800, fontSize: '0.72rem' }}
                   />
                 </Stack>
 
                 {analytics?.byCategory && analytics.byCategory.length > 0 ? (
-                  <Stack spacing={2}>
+                  <Stack spacing={1.5}>
                     {analytics.byCategory.map((cat) => {
                       const percentage = analytics.total > 0 ? Math.round((cat.count / analytics.total) * 100) : 0
                       const icon = categoryIconMap[cat.category] || '📌'
 
                       return (
-                        <Box key={cat.category} sx={{ p: 1.5, bgcolor: '#F8FAF9', borderRadius: 2.5, border: '1px solid rgba(0, 65, 46, 0.05)' }}>
-                          <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 0.8 }}>
-                            <Stack direction="row" alignItems="center" spacing={1.2}>
-                              <Typography sx={{ fontSize: '1.25rem' }}>{icon}</Typography>
-                              <Typography variant="body2" sx={{ fontWeight: 700, color: '#0B1C16', fontSize: '0.92rem' }}>
+                        <Box key={cat.category} sx={{ p: 1.2, bgcolor: '#F8FAF9', borderRadius: '4px', border: '1px solid rgba(0, 65, 46, 0.05)' }}>
+                          <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 0.6 }}>
+                            <Stack direction="row" alignItems="center" spacing={1}>
+                              <Typography sx={{ fontSize: '1.15rem' }}>{icon}</Typography>
+                              <Typography variant="body2" sx={{ fontWeight: 700, color: '#0B1C16', fontSize: '0.88rem' }}>
                                 {cat.category}
                               </Typography>
                             </Stack>
                             <Stack direction="row" spacing={1} alignItems="center">
-                              <Typography variant="body2" sx={{ fontWeight: 900, color: '#00412E', fontSize: '0.95rem' }}>
+                              <Typography variant="body2" sx={{ fontWeight: 900, color: '#00412E', fontSize: '0.9rem' }}>
                                 {cat.count} {cat.count === 1 ? 'request' : 'requests'}
                               </Typography>
                               <Chip
                                 size="small"
                                 label={`${percentage}%`}
                                 sx={{
-                                  height: 20,
-                                  fontSize: '0.72rem',
+                                  height: 18,
+                                  fontSize: '0.68rem',
                                   fontWeight: 800,
                                   bgcolor: '#E6F0EB',
                                   color: '#00412E',
@@ -933,8 +908,8 @@ export default function AdminDashboard({ token, user, onOpenAuth }: AdminDashboa
                             variant="determinate"
                             value={percentage}
                             sx={{
-                              height: 6,
-                              borderRadius: 3,
+                              height: 5,
+                              borderRadius: 1,
                               bgcolor: 'rgba(0, 65, 46, 0.08)',
                               '& .MuiLinearProgress-bar': { bgcolor: '#00412E' },
                             }}
@@ -950,30 +925,26 @@ export default function AdminDashboard({ token, user, onOpenAuth }: AdminDashboa
                 )}
               </Card>
 
-              {/* Status Pipeline & Triage Efficiency Widget (Like Climate Change Index / Global in reference) */}
+              {/* Status Pipeline & Triage Efficiency Widget */}
               <Card
                 sx={{
-                  p: 3,
-                  bgcolor: '#FFFFFF',
-                  borderRadius: 3.5,
-                  boxShadow: '0 4px 18px rgba(0, 65, 46, 0.04)',
+                  p: 2.5,
                   display: 'flex',
                   flexDirection: 'column',
                   justifyContent: 'space-between',
                 }}
               >
                 <Box>
-                  <Typography variant="h6" sx={{ fontWeight: 900, color: '#00412E', fontSize: '1.2rem', mb: 0.5 }}>
+                  <Typography variant="h6" sx={{ fontWeight: 900, color: '#00412E', fontSize: '1.15rem', mb: 0.3 }}>
                     Triage & Resolution Pipeline
                   </Typography>
-                  <Typography variant="caption" color="text.secondary" sx={{ fontSize: '0.82rem', display: 'block', mb: 2.5 }}>
+                  <Typography variant="caption" color="text.secondary" sx={{ fontSize: '0.8rem', display: 'block', mb: 2 }}>
                     Real-time ratio between open backlog and completed interventions
                   </Typography>
 
-                  <Stack spacing={2.5}>
-                    {/* Pipeline bar */}
+                  <Stack spacing={2}>
                     <Box>
-                      <Stack direction="row" justifyContent="space-between" sx={{ mb: 0.8 }}>
+                      <Stack direction="row" justifyContent="space-between" sx={{ mb: 0.6 }}>
                         <Typography variant="caption" sx={{ fontWeight: 700, color: 'text.secondary' }}>
                           Workflow Pipeline Breakdown
                         </Typography>
@@ -981,7 +952,7 @@ export default function AdminDashboard({ token, user, onOpenAuth }: AdminDashboa
                           {analytics?.total || 0} Total
                         </Typography>
                       </Stack>
-                      <Box sx={{ display: 'flex', height: 12, borderRadius: 6, overflow: 'hidden', bgcolor: '#E8EAE5' }}>
+                      <Box sx={{ display: 'flex', height: 10, borderRadius: '4px', overflow: 'hidden', bgcolor: '#E8EAE5' }}>
                         <Box
                           sx={{
                             width: `${analytics?.total ? ((analytics.pending / analytics.total) * 100) : 0}%`,
@@ -1007,39 +978,39 @@ export default function AdminDashboard({ token, user, onOpenAuth }: AdminDashboa
                     </Box>
 
                     {/* Legend */}
-                    <Stack spacing={1.2}>
+                    <Stack spacing={1}>
                       <Stack direction="row" justifyContent="space-between" alignItems="center">
                         <Stack direction="row" spacing={1} alignItems="center">
-                          <Box sx={{ width: 10, height: 10, borderRadius: '50%', bgcolor: '#D97706' }} />
-                          <Typography variant="body2" sx={{ fontWeight: 700, fontSize: '0.88rem' }}>
+                          <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: '#D97706' }} />
+                          <Typography variant="body2" sx={{ fontWeight: 700, fontSize: '0.84rem' }}>
                             Pending Department Triage
                           </Typography>
                         </Stack>
-                        <Typography variant="body2" sx={{ fontWeight: 800, color: '#D97706' }}>
+                        <Typography variant="body2" sx={{ fontWeight: 800, color: '#D97706', fontSize: '0.88rem' }}>
                           {analytics?.pending ?? 0}
                         </Typography>
                       </Stack>
 
                       <Stack direction="row" justifyContent="space-between" alignItems="center">
                         <Stack direction="row" spacing={1} alignItems="center">
-                          <Box sx={{ width: 10, height: 10, borderRadius: '50%', bgcolor: '#96BF8A' }} />
-                          <Typography variant="body2" sx={{ fontWeight: 700, fontSize: '0.88rem' }}>
+                          <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: '#96BF8A' }} />
+                          <Typography variant="body2" sx={{ fontWeight: 700, fontSize: '0.84rem' }}>
                             Active Fieldwork & Repairs
                           </Typography>
                         </Stack>
-                        <Typography variant="body2" sx={{ fontWeight: 800, color: '#00412E' }}>
+                        <Typography variant="body2" sx={{ fontWeight: 800, color: '#00412E', fontSize: '0.88rem' }}>
                           {analytics?.inProgress ?? 0}
                         </Typography>
                       </Stack>
 
                       <Stack direction="row" justifyContent="space-between" alignItems="center">
                         <Stack direction="row" spacing={1} alignItems="center">
-                          <Box sx={{ width: 10, height: 10, borderRadius: '50%', bgcolor: '#00412E' }} />
-                          <Typography variant="body2" sx={{ fontWeight: 700, fontSize: '0.88rem' }}>
+                          <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: '#00412E' }} />
+                          <Typography variant="body2" sx={{ fontWeight: 700, fontSize: '0.84rem' }}>
                             Officially Resolved
                           </Typography>
                         </Stack>
-                        <Typography variant="body2" sx={{ fontWeight: 800, color: '#15803D' }}>
+                        <Typography variant="body2" sx={{ fontWeight: 800, color: '#15803D', fontSize: '0.88rem' }}>
                           {analytics?.resolved ?? 0}
                         </Typography>
                       </Stack>
@@ -1050,17 +1021,17 @@ export default function AdminDashboard({ token, user, onOpenAuth }: AdminDashboa
                 {/* Efficiency callout banner */}
                 <Box
                   sx={{
-                    mt: 3,
-                    p: 2,
-                    borderRadius: 2.5,
+                    mt: 2.5,
+                    p: 1.5,
+                    borderRadius: '4px',
                     bgcolor: '#E6F0EB',
                     border: '1px solid rgba(0, 65, 46, 0.12)',
                   }}
                 >
-                  <Typography variant="subtitle2" sx={{ fontWeight: 800, color: '#00412E', fontSize: '0.92rem', mb: 0.3 }}>
+                  <Typography variant="subtitle2" sx={{ fontWeight: 800, color: '#00412E', fontSize: '0.88rem', mb: 0.2 }}>
                     ⚡ Service Delivery SLA Status
                   </Typography>
-                  <Typography variant="caption" sx={{ color: '#0B1C16', fontSize: '0.82rem', lineHeight: 1.4, display: 'block' }}>
+                  <Typography variant="caption" sx={{ color: '#0B1C16', fontSize: '0.78rem', lineHeight: 1.35, display: 'block' }}>
                     {resolutionRate >= 50
                       ? 'County response rate is performing well. Over half of logged requests have reached verified resolution.'
                       : 'Pending workload requires active field crew assignment across road and water sectors.'}
@@ -1077,10 +1048,10 @@ export default function AdminDashboard({ token, user, onOpenAuth }: AdminDashboa
         {(activeSection === 'overview' || activeSection === 'requests') && (
           <Box sx={{ width: '100%' }}>
             {/* Filter and Search Bar */}
-            <Card sx={{ p: 2, mb: 2.5, borderRadius: 3.5, boxShadow: '0 2px 10px rgba(0, 65, 46, 0.03)' }}>
-              <Stack direction={{ xs: 'column', md: 'row' }} spacing={2} alignItems={{ md: 'center' }} justifyContent="space-between">
+            <Card sx={{ p: 2, mb: 2 }}>
+              <Stack direction={{ xs: 'column', md: 'row' }} spacing={1.5} alignItems={{ md: 'center' }} justifyContent="space-between">
                 {/* Status Chips */}
-                <Stack direction="row" spacing={1} flexWrap="wrap" gap={0.8}>
+                <Stack direction="row" spacing={0.8} flexWrap="wrap" gap={0.6}>
                   {['ALL', 'PENDING', 'IN_PROGRESS', 'RESOLVED'].map((filter) => (
                     <Chip
                       key={filter}
@@ -1089,19 +1060,19 @@ export default function AdminDashboard({ token, user, onOpenAuth }: AdminDashboa
                       color={statusFilter === filter ? 'primary' : 'default'}
                       variant={statusFilter === filter ? 'filled' : 'outlined'}
                       onClick={() => setStatusFilter(filter)}
-                      sx={{ fontWeight: 700, fontSize: '0.88rem', py: 1.8 }}
+                      sx={{ fontWeight: 700, fontSize: '0.82rem', height: 28 }}
                     />
                   ))}
                 </Stack>
 
                 {/* Search & Category Filter */}
-                <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.5} sx={{ width: { xs: '100%', md: 'auto' } }}>
+                <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} sx={{ width: { xs: '100%', md: 'auto' } }}>
                   <TextField
                     select
                     size="small"
                     value={categoryFilter}
                     onChange={(e) => setCategoryFilter(e.target.value)}
-                    sx={{ minWidth: 180 }}
+                    sx={{ minWidth: 170 }}
                   >
                     <MenuItem value="ALL">All Categories</MenuItem>
                     {availableCategories.map((c) => (
@@ -1117,9 +1088,9 @@ export default function AdminDashboard({ token, user, onOpenAuth }: AdminDashboa
                     onKeyDown={(e) => {
                       if (e.key === 'Enter') void fetchRequests()
                     }}
-                    sx={{ minWidth: 220, flexGrow: 1 }}
+                    sx={{ minWidth: 200, flexGrow: 1 }}
                   />
-                  <Button variant="contained" size="small" onClick={fetchRequests} sx={{ px: 2.5, fontWeight: 700 }}>
+                  <Button variant="contained" size="small" onClick={fetchRequests} sx={{ px: 2, fontWeight: 700 }}>
                     Filter
                   </Button>
                 </Stack>
@@ -1129,14 +1100,14 @@ export default function AdminDashboard({ token, user, onOpenAuth }: AdminDashboa
             {/* Requests Content */}
             {requestsLoading ? (
               <Box sx={{ textAlign: 'center', py: 8 }}>
-                <CircularProgress size={40} color="primary" />
-                <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
+                <CircularProgress size={38} color="primary" />
+                <Typography variant="body2" color="text.secondary" sx={{ mt: 1.5 }}>
                   Loading service requests...
                 </Typography>
               </Box>
             ) : requests.length === 0 ? (
-              <Paper elevation={0} sx={{ p: 5, textAlign: 'center', border: '1px solid rgba(0, 65, 46, 0.1)', borderRadius: 3.5, bgcolor: '#FFFFFF' }}>
-                <Typography variant="h6" sx={{ fontWeight: 700, color: 'text.secondary', mb: 1 }}>
+              <Paper elevation={0} sx={{ p: 4, textAlign: 'center', border: '1px solid rgba(0, 65, 46, 0.1)', bgcolor: '#FFFFFF' }}>
+                <Typography variant="h6" sx={{ fontWeight: 700, color: 'text.secondary', mb: 0.5 }}>
                   No Service Requests Found
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
@@ -1147,29 +1118,21 @@ export default function AdminDashboard({ token, user, onOpenAuth }: AdminDashboa
               </Paper>
             ) : isMobile ? (
               /* Mobile Card View (Zero horizontal scroll!) */
-              <Stack spacing={2}>
+              <Stack spacing={1.5}>
                 {requests.map((row) => (
-                  <Card
-                    key={row.id}
-                    sx={{
-                      p: 2,
-                      borderRadius: 3,
-                      border: '1px solid rgba(0, 65, 46, 0.08)',
-                      bgcolor: '#FFFFFF',
-                    }}
-                  >
-                    <Stack spacing={1.5}>
+                  <Card key={row.id} sx={{ p: 1.8 }}>
+                    <Stack spacing={1.2}>
                       <Stack direction="row" justifyContent="space-between" alignItems="center">
                         <Box
                           sx={{
                             fontFamily: 'monospace',
                             fontWeight: 800,
-                            fontSize: '0.95rem',
+                            fontSize: '0.9rem',
                             color: '#00412E',
                             bgcolor: '#E8EAE5',
-                            px: 1.2,
-                            py: 0.4,
-                            borderRadius: 1.5,
+                            px: 1,
+                            py: 0.3,
+                            borderRadius: '4px',
                           }}
                         >
                           {row.referenceNumber}
@@ -1178,12 +1141,12 @@ export default function AdminDashboard({ token, user, onOpenAuth }: AdminDashboa
                           size="small"
                           color={statusColorMap[row.status]}
                           label={statusLabelMap[row.status]}
-                          sx={{ fontWeight: 800, fontSize: '0.78rem' }}
+                          sx={{ fontWeight: 800, fontSize: '0.75rem', height: 22 }}
                         />
                       </Stack>
 
                       <Box>
-                        <Typography variant="subtitle2" sx={{ fontWeight: 800, color: '#0B1C16' }}>
+                        <Typography variant="subtitle2" sx={{ fontWeight: 800, color: '#0B1C16', fontSize: '0.92rem' }}>
                           {row.category}
                         </Typography>
                         <Typography variant="caption" color="text.secondary">
@@ -1191,7 +1154,7 @@ export default function AdminDashboard({ token, user, onOpenAuth }: AdminDashboa
                         </Typography>
                       </Box>
 
-                      <Typography variant="body2" sx={{ color: 'text.secondary', fontSize: '0.88rem', lineHeight: 1.4 }}>
+                      <Typography variant="body2" sx={{ color: 'text.secondary', fontSize: '0.84rem', lineHeight: 1.4 }}>
                         {row.description.length > 100 ? `${row.description.substring(0, 100)}...` : row.description}
                       </Typography>
 
@@ -1199,7 +1162,7 @@ export default function AdminDashboard({ token, user, onOpenAuth }: AdminDashboa
                         variant="contained"
                         size="small"
                         onClick={() => handleOpenStatusDialog(row)}
-                        sx={{ fontWeight: 700, alignSelf: 'flex-start', mt: 0.5 }}
+                        sx={{ fontWeight: 700, alignSelf: 'flex-start', mt: 0.5, py: 0.6 }}
                       >
                         Review & Update Status
                       </Button>
@@ -1214,7 +1177,6 @@ export default function AdminDashboard({ token, user, onOpenAuth }: AdminDashboa
                 elevation={0}
                 sx={{
                   border: '1px solid rgba(0, 65, 46, 0.08)',
-                  borderRadius: 3.5,
                   overflow: 'hidden',
                   bgcolor: '#FFFFFF',
                 }}
@@ -1222,12 +1184,12 @@ export default function AdminDashboard({ token, user, onOpenAuth }: AdminDashboa
                 <Table sx={{ minWidth: 800 }}>
                   <TableHead sx={{ bgcolor: '#F8FAF9' }}>
                     <TableRow>
-                      <TableCell sx={{ fontWeight: 800, fontSize: '0.95rem', py: 1.8 }}>Reference #</TableCell>
-                      <TableCell sx={{ fontWeight: 800, fontSize: '0.95rem', py: 1.8 }}>Citizen</TableCell>
-                      <TableCell sx={{ fontWeight: 800, fontSize: '0.95rem', py: 1.8 }}>Sector & Location</TableCell>
-                      <TableCell sx={{ fontWeight: 800, fontSize: '0.95rem', py: 1.8 }}>Current Status</TableCell>
-                      <TableCell sx={{ fontWeight: 800, fontSize: '0.95rem', py: 1.8 }}>Submission Date</TableCell>
-                      <TableCell sx={{ fontWeight: 800, fontSize: '0.95rem', py: 1.8 }} align="right">
+                      <TableCell sx={{ fontWeight: 800, fontSize: '0.9rem', py: 1.5 }}>Reference #</TableCell>
+                      <TableCell sx={{ fontWeight: 800, fontSize: '0.9rem', py: 1.5 }}>Citizen</TableCell>
+                      <TableCell sx={{ fontWeight: 800, fontSize: '0.9rem', py: 1.5 }}>Sector & Location</TableCell>
+                      <TableCell sx={{ fontWeight: 800, fontSize: '0.9rem', py: 1.5 }}>Current Status</TableCell>
+                      <TableCell sx={{ fontWeight: 800, fontSize: '0.9rem', py: 1.5 }}>Submission Date</TableCell>
+                      <TableCell sx={{ fontWeight: 800, fontSize: '0.9rem', py: 1.5 }} align="right">
                         Triage Action
                       </TableCell>
                     </TableRow>
@@ -1235,22 +1197,22 @@ export default function AdminDashboard({ token, user, onOpenAuth }: AdminDashboa
                   <TableBody>
                     {requests.map((row) => (
                       <TableRow key={row.id} hover sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                        <TableCell sx={{ fontFamily: 'monospace', fontWeight: 800, color: '#00412E', fontSize: '0.95rem' }}>
+                        <TableCell sx={{ fontFamily: 'monospace', fontWeight: 800, color: '#00412E', fontSize: '0.9rem' }}>
                           {row.referenceNumber}
                         </TableCell>
                         <TableCell>
-                          <Typography variant="body2" sx={{ fontWeight: 700, fontSize: '0.92rem' }}>
+                          <Typography variant="body2" sx={{ fontWeight: 700, fontSize: '0.88rem' }}>
                             {row.citizen?.name || 'Citizen'}
                           </Typography>
-                          <Typography variant="caption" color="text.secondary" sx={{ fontSize: '0.78rem' }}>
+                          <Typography variant="caption" color="text.secondary" sx={{ fontSize: '0.75rem' }}>
                             {row.citizen?.email}
                           </Typography>
                         </TableCell>
                         <TableCell>
-                          <Typography variant="body2" sx={{ fontWeight: 600, fontSize: '0.92rem' }}>
+                          <Typography variant="body2" sx={{ fontWeight: 600, fontSize: '0.88rem' }}>
                             {row.category}
                           </Typography>
-                          <Typography variant="caption" color="text.secondary" sx={{ fontSize: '0.78rem' }}>
+                          <Typography variant="caption" color="text.secondary" sx={{ fontSize: '0.75rem' }}>
                             📍 {row.location}
                           </Typography>
                         </TableCell>
@@ -1259,10 +1221,10 @@ export default function AdminDashboard({ token, user, onOpenAuth }: AdminDashboa
                             size="small"
                             color={statusColorMap[row.status]}
                             label={statusLabelMap[row.status]}
-                            sx={{ fontWeight: 800, fontSize: '0.82rem', py: 1.8 }}
+                            sx={{ fontWeight: 800, fontSize: '0.78rem', height: 22 }}
                           />
                         </TableCell>
-                        <TableCell sx={{ fontSize: '0.85rem', color: 'text.secondary' }}>
+                        <TableCell sx={{ fontSize: '0.82rem', color: 'text.secondary' }}>
                           {new Date(row.createdAt).toLocaleDateString()}
                         </TableCell>
                         <TableCell align="right">
@@ -1270,7 +1232,7 @@ export default function AdminDashboard({ token, user, onOpenAuth }: AdminDashboa
                             variant="contained"
                             size="small"
                             onClick={() => handleOpenStatusDialog(row)}
-                            sx={{ fontSize: '0.85rem', fontWeight: 700, py: 0.8, px: 2 }}
+                            sx={{ fontSize: '0.82rem', fontWeight: 700, py: 0.6, px: 1.8 }}
                           >
                             Review & Update
                           </Button>
@@ -1293,17 +1255,16 @@ export default function AdminDashboard({ token, user, onOpenAuth }: AdminDashboa
             elevation={0}
             sx={{
               border: '1px solid rgba(0, 65, 46, 0.08)',
-              borderRadius: 3.5,
               overflow: 'hidden',
               bgcolor: '#FFFFFF',
             }}
           >
             {usersLoading ? (
               <Box sx={{ textAlign: 'center', py: 8 }}>
-                <CircularProgress size={40} color="primary" />
+                <CircularProgress size={38} color="primary" />
               </Box>
             ) : users.length === 0 ? (
-              <Box sx={{ p: 5, textAlign: 'center' }}>
+              <Box sx={{ p: 4, textAlign: 'center' }}>
                 <Typography variant="h6" color="text.secondary">
                   No registered users found.
                 </Typography>
@@ -1312,24 +1273,24 @@ export default function AdminDashboard({ token, user, onOpenAuth }: AdminDashboa
               <Table sx={{ minWidth: 700 }}>
                 <TableHead sx={{ bgcolor: '#F8FAF9' }}>
                   <TableRow>
-                    <TableCell sx={{ fontWeight: 800, fontSize: '0.95rem', py: 1.8 }}>Full Name</TableCell>
-                    <TableCell sx={{ fontWeight: 800, fontSize: '0.95rem', py: 1.8 }}>Email Address</TableCell>
-                    <TableCell sx={{ fontWeight: 800, fontSize: '0.95rem', py: 1.8 }}>Assigned Role</TableCell>
-                    <TableCell sx={{ fontWeight: 800, fontSize: '0.95rem', py: 1.8 }}>Account Status</TableCell>
-                    <TableCell sx={{ fontWeight: 800, fontSize: '0.95rem', py: 1.8 }}>Registration Date</TableCell>
+                    <TableCell sx={{ fontWeight: 800, fontSize: '0.9rem', py: 1.5 }}>Full Name</TableCell>
+                    <TableCell sx={{ fontWeight: 800, fontSize: '0.9rem', py: 1.5 }}>Email Address</TableCell>
+                    <TableCell sx={{ fontWeight: 800, fontSize: '0.9rem', py: 1.5 }}>Assigned Role</TableCell>
+                    <TableCell sx={{ fontWeight: 800, fontSize: '0.9rem', py: 1.5 }}>Account Status</TableCell>
+                    <TableCell sx={{ fontWeight: 800, fontSize: '0.9rem', py: 1.5 }}>Registration Date</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {users.map((u) => (
                     <TableRow key={u.id} hover>
-                      <TableCell sx={{ fontWeight: 700, fontSize: '0.92rem' }}>{u.name}</TableCell>
-                      <TableCell sx={{ fontSize: '0.88rem' }}>{u.email}</TableCell>
+                      <TableCell sx={{ fontWeight: 700, fontSize: '0.88rem' }}>{u.name}</TableCell>
+                      <TableCell sx={{ fontSize: '0.84rem' }}>{u.email}</TableCell>
                       <TableCell>
                         <Chip
                           size="small"
                           color={u.role === 'ADMIN' ? 'secondary' : 'default'}
                           label={u.role}
-                          sx={{ fontWeight: 800, fontSize: '0.78rem' }}
+                          sx={{ fontWeight: 800, fontSize: '0.75rem', height: 22 }}
                         />
                       </TableCell>
                       <TableCell>
@@ -1338,10 +1299,10 @@ export default function AdminDashboard({ token, user, onOpenAuth }: AdminDashboa
                           color={u.isActive ? 'success' : 'error'}
                           label={u.isActive ? 'Active' : 'Inactive'}
                           variant="outlined"
-                          sx={{ fontWeight: 700, fontSize: '0.78rem' }}
+                          sx={{ fontWeight: 700, fontSize: '0.75rem', height: 22 }}
                         />
                       </TableCell>
-                      <TableCell sx={{ fontSize: '0.85rem', color: 'text.secondary' }}>
+                      <TableCell sx={{ fontSize: '0.82rem', color: 'text.secondary' }}>
                         {new Date(u.createdAt).toLocaleDateString()}
                       </TableCell>
                     </TableRow>
@@ -1359,30 +1320,29 @@ export default function AdminDashboard({ token, user, onOpenAuth }: AdminDashboa
         onClose={() => setSelectedRequest(null)}
         maxWidth="md"
         fullWidth
-        PaperProps={{ sx: { borderRadius: 4, p: 1 } }}
       >
-        <DialogTitle sx={{ pb: 1, pt: 2.5 }}>
-          <Typography variant="h5" sx={{ fontWeight: 800, color: '#00412E' }}>
+        <DialogTitle sx={{ pb: 1, pt: 2.2 }}>
+          <Typography variant="h5" sx={{ fontWeight: 800, color: '#00412E', fontSize: '1.25rem' }}>
             Update Request Status & Resolution
           </Typography>
-          <Typography variant="subtitle2" color="text.secondary" sx={{ mt: 0.5 }}>
+          <Typography variant="subtitle2" color="text.secondary" sx={{ mt: 0.3, fontSize: '0.85rem' }}>
             Reference: <strong>{selectedRequest?.referenceNumber}</strong> • {selectedRequest?.category}
           </Typography>
         </DialogTitle>
 
-        <DialogContent sx={{ py: 3 }}>
-          <Stack spacing={2.5}>
+        <DialogContent sx={{ py: 2.5 }}>
+          <Stack spacing={2}>
             {updateError && (
-              <Alert severity="error" sx={{ borderRadius: 2 }}>
+              <Alert severity="error" sx={{ py: 0.8 }}>
                 {updateError}
               </Alert>
             )}
 
-            <Box sx={{ p: 2, bgcolor: '#F8FAF9', borderRadius: 2.5, border: '1px solid rgba(0, 65, 46, 0.08)' }}>
-              <Typography variant="caption" sx={{ color: '#00412E', fontWeight: 800, textTransform: 'uppercase', display: 'block', mb: 0.5 }}>
+            <Box sx={{ p: 1.8, bgcolor: '#F8FAF9', borderRadius: '4px', border: '1px solid rgba(0, 65, 46, 0.08)' }}>
+              <Typography variant="caption" sx={{ color: '#00412E', fontWeight: 800, textTransform: 'uppercase', display: 'block', mb: 0.3 }}>
                 Citizen Description & Location
               </Typography>
-              <Typography variant="body1" sx={{ lineHeight: 1.6, fontSize: '1rem', mb: 1 }}>
+              <Typography variant="body2" sx={{ lineHeight: 1.6, fontSize: '0.92rem', mb: 0.8 }}>
                 {selectedRequest?.description}
               </Typography>
               <Typography variant="caption" color="text.secondary">
@@ -1391,8 +1351,8 @@ export default function AdminDashboard({ token, user, onOpenAuth }: AdminDashboa
             </Box>
 
             {selectedRequest?.imageUrl && (
-              <Box sx={{ mt: 1 }}>
-                <Typography variant="caption" sx={{ color: 'text.secondary', fontWeight: 700, display: 'block', mb: 0.5 }}>
+              <Box sx={{ mt: 0.5 }}>
+                <Typography variant="caption" sx={{ color: 'text.secondary', fontWeight: 700, display: 'block', mb: 0.3 }}>
                   Incident Photo Attachment:
                 </Typography>
                 <Box
@@ -1402,7 +1362,7 @@ export default function AdminDashboard({ token, user, onOpenAuth }: AdminDashboa
                   onError={(e) => {
                     ;(e.target as HTMLImageElement).style.display = 'none'
                   }}
-                  sx={{ maxHeight: 200, borderRadius: 2, border: '1px solid #e2e8f0', objectFit: 'cover' }}
+                  sx={{ maxHeight: 180, borderRadius: '4px', border: '1px solid #e2e8f0', objectFit: 'cover' }}
                 />
               </Box>
             )}
@@ -1413,18 +1373,19 @@ export default function AdminDashboard({ token, user, onOpenAuth }: AdminDashboa
               value={newStatus}
               onChange={(e) => setNewStatus(e.target.value as RequestStatus)}
               fullWidth
-              size="medium"
+              size="small"
             >
-              <MenuItem value="PENDING" sx={{ py: 1.2 }}>PENDING — Waiting for department triage</MenuItem>
-              <MenuItem value="IN_PROGRESS" sx={{ py: 1.2 }}>IN_PROGRESS — Field crew deployed / work ongoing</MenuItem>
-              <MenuItem value="RESOLVED" sx={{ py: 1.2 }}>RESOLVED — Intervention completed</MenuItem>
+              <MenuItem value="PENDING" sx={{ py: 1 }}>PENDING — Waiting for department triage</MenuItem>
+              <MenuItem value="IN_PROGRESS" sx={{ py: 1 }}>IN_PROGRESS — Field crew deployed / work ongoing</MenuItem>
+              <MenuItem value="RESOLVED" sx={{ py: 1 }}>RESOLVED — Intervention completed</MenuItem>
             </TextField>
 
             <TextField
               label="Official County Resolution Note / Action Summary"
               multiline
-              rows={4}
+              rows={3}
               fullWidth
+              size="small"
               value={resolutionNote}
               onChange={(e) => setResolutionNote(e.target.value)}
               placeholder="e.g. Murang'a County road engineering unit inspected the site, excavated damaged culverts, and resurfaced the 1.2km stretch with tarmac."
@@ -1433,19 +1394,18 @@ export default function AdminDashboard({ token, user, onOpenAuth }: AdminDashboa
           </Stack>
         </DialogContent>
 
-        <DialogActions sx={{ px: 3, pb: 3 }}>
+        <DialogActions sx={{ px: 3, pb: 2.5 }}>
           <Button onClick={() => setSelectedRequest(null)} disabled={updating} sx={{ fontWeight: 600 }}>
             Cancel
           </Button>
           <Button
             variant="contained"
             color="primary"
-            size="large"
             onClick={handleSaveStatus}
             disabled={updating}
-            sx={{ fontWeight: 800, px: 3.5, py: 1.2 }}
+            sx={{ fontWeight: 800, px: 3, py: 0.9 }}
           >
-            {updating ? <CircularProgress size={22} color="inherit" /> : 'Save Status Update'}
+            {updating ? <CircularProgress size={20} color="inherit" /> : 'Save Status Update'}
           </Button>
         </DialogActions>
       </Dialog>

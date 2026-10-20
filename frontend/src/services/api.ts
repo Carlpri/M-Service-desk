@@ -212,6 +212,26 @@ export async function getRequestById(
   })
 }
 
+export async function getUploadStatus(): Promise<{ configured: boolean }> {
+  return request<{ configured: boolean }>('/api/service-requests/upload-status', {
+    method: 'GET',
+  })
+}
+
+export async function uploadIncidentImage(
+  token: string,
+  imageDataBase64OrUrl: string,
+): Promise<{ message: string; url: string; publicId: string }> {
+  return request<{ message: string; url: string; publicId: string }>(
+    '/api/service-requests/upload-image',
+    {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${token}` },
+      body: JSON.stringify({ image: imageDataBase64OrUrl }),
+    },
+  )
+}
+
 // Service Requests API (Admin)
 export async function getAllRequests(
   token: string,

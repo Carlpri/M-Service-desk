@@ -62,7 +62,7 @@ export default function PortalOverview({
         elevation={0}
         sx={{
           p: { xs: 4, sm: 6, md: 7 },
-          borderRadius: 4,
+          borderRadius: '4px',
           background: 'linear-gradient(135deg, #00412E 0%, #00261A 100%)',
           color: '#ffffff',
           mb: 5,
@@ -79,7 +79,7 @@ export default function PortalOverview({
               color: '#96BF8A',
               px: 2,
               py: 0.8,
-              borderRadius: '30px',
+              borderRadius: '4px',
               width: 'fit-content',
               fontSize: '0.95rem',
               fontWeight: 800,
@@ -124,7 +124,7 @@ export default function PortalOverview({
                 fontSize: '1.15rem',
                 py: 1.6,
                 px: 4.5,
-                borderRadius: '10px',
+                borderRadius: '4px',
                 '&:hover': { bgcolor: '#B5D6AB', transform: 'translateY(-1px)' },
               }}
             >
@@ -142,7 +142,7 @@ export default function PortalOverview({
                 py: 1.6,
                 px: 4.5,
                 borderWidth: '2px',
-                borderRadius: '10px',
+                borderRadius: '4px',
                 '&:hover': { borderColor: '#ffffff', bgcolor: 'rgba(255,255,255,0.12)', borderWidth: '2px' },
               }}
             >
