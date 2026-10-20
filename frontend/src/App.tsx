@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect, useState } from 'react'
-import { Box, CircularProgress, Container, Typography } from '@mui/material'
+import { Box, CircularProgress, Container, Stack, Typography } from '@mui/material'
 import Navbar from './components/Navbar'
 import AuthDialog from './components/AuthDialog'
 import PortalOverview from './components/PortalOverview'
@@ -98,7 +98,16 @@ export default function App({ darkMode = false, onToggleTheme }: AppProps) {
         onToggleTheme={onToggleTheme}
       />
 
-      <Container maxWidth={false} component="main" sx={{ flexGrow: 1, py: 3, px: { xs: 2, sm: 4, md: 6, lg: 8, xl: 10 } }}>
+      <Container
+        maxWidth={false}
+        component="main"
+        sx={{
+          flexGrow: 1,
+          py: 3,
+          pb: { xs: 10, md: 4 },
+          px: { xs: 1.5, sm: 3, md: 5, lg: 7, xl: 9 },
+        }}
+      >
         <Suspense
           fallback={
             <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', py: 12 }}>
@@ -121,8 +130,8 @@ export default function App({ darkMode = false, onToggleTheme }: AppProps) {
               user={user}
               onOpenAuth={() => setAuthDialogOpen(true)}
               onSuccess={() => {
-                // Option to switch to tracking tab
-                setTimeout(() => setCurrentTab(2), 2200)
+                // Switch to citizen tracking tab
+                setTimeout(() => setCurrentTab(2), 2000)
               }}
             />
           )}
@@ -152,12 +161,14 @@ export default function App({ darkMode = false, onToggleTheme }: AppProps) {
         onSuccess={handleAuthSuccess}
       />
 
+      {/* Desktop / Tablet Footer */}
       <Box
         component="footer"
         sx={{
           py: 3,
           px: 2,
           mt: 'auto',
+          mb: { xs: 7, md: 0 },
           borderTop: '1px solid',
           borderColor: 'divider',
           bgcolor: 'background.paper',
@@ -170,6 +181,103 @@ export default function App({ darkMode = false, onToggleTheme }: AppProps) {
         <Typography variant="caption" color="text.secondary">
           Mini eCitizen-style architecture demonstrating clean RBAC, opaque bearer sessions, and live public request tracking.
         </Typography>
+      </Box>
+
+      {/* Mobile Bottom Navigation Bar (Android-friendly thumb bar) */}
+      <Box
+        sx={{
+          position: 'fixed',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          display: { xs: 'block', md: 'none' },
+          zIndex: 1100,
+          bgcolor: 'background.paper',
+          borderTop: '1px solid',
+          borderColor: 'divider',
+          boxShadow: '0 -4px 18px rgba(0, 65, 46, 0.08)',
+        }}
+      >
+        <Stack
+          direction="row"
+          justifyContent="space-around"
+          alignItems="center"
+          sx={{ height: 58, px: 1 }}
+        >
+          <Box
+            onClick={() => setCurrentTab(0)}
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              cursor: 'pointer',
+              color: currentTab === 0 ? 'primary.main' : 'text.secondary',
+              fontWeight: 700,
+              fontSize: '0.72rem',
+              py: 0.5,
+              flexGrow: 1,
+            }}
+          >
+            <span style={{ fontSize: '1.25rem' }}>🏛️</span>
+            <span>Portal</span>
+          </Box>
+
+          <Box
+            onClick={() => setCurrentTab(1)}
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              cursor: 'pointer',
+              color: currentTab === 1 ? 'primary.main' : 'text.secondary',
+              fontWeight: 700,
+              fontSize: '0.72rem',
+              py: 0.5,
+              flexGrow: 1,
+            }}
+          >
+            <span style={{ fontSize: '1.25rem' }}>📝</span>
+            <span>Submit</span>
+          </Box>
+
+          <Box
+            onClick={() => setCurrentTab(2)}
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              cursor: 'pointer',
+              color: currentTab === 2 ? 'primary.main' : 'text.secondary',
+              fontWeight: 700,
+              fontSize: '0.72rem',
+              py: 0.5,
+              flexGrow: 1,
+            }}
+          >
+            <span style={{ fontSize: '1.25rem' }}>📋</span>
+            <span>My Requests</span>
+          </Box>
+
+          {user?.role === 'ADMIN' && (
+            <Box
+              onClick={() => setCurrentTab(3)}
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                cursor: 'pointer',
+                color: currentTab === 3 ? 'primary.main' : 'text.secondary',
+                fontWeight: 700,
+                fontSize: '0.72rem',
+                py: 0.5,
+                flexGrow: 1,
+              }}
+            >
+              <span style={{ fontSize: '1.25rem' }}>⚙️</span>
+              <span>Admin</span>
+            </Box>
+          )}
+        </Stack>
       </Box>
     </Box>
   )

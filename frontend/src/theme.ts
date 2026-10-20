@@ -8,102 +8,146 @@ export function getAppTheme(mode: 'light' | 'dark'): Theme {
       mode,
       primary: isDark
         ? {
-            main: '#2dd4bf',
-            dark: '#14b8a6',
-            light: '#5eead4',
-            contrastText: '#042f2e',
+            main: '#96BF8A',
+            dark: '#00412E',
+            light: '#B5D6AB',
+            contrastText: '#00261A',
           }
         : {
-            main: '#176b57',
-            dark: '#0f483a',
-            light: '#238a71',
-            contrastText: '#ffffff',
+            main: '#00412E', // Brand Primary Dark Green
+            dark: '#002C1F',
+            light: '#1B5E4A',
+            contrastText: '#FFFFFF',
           },
       secondary: isDark
         ? {
-            main: '#fbbf24',
-            dark: '#d97706',
-            light: '#fde68a',
-            contrastText: '#451a03',
+            main: '#96BF8A',
+            dark: '#6F9864',
+            light: '#C4E2BB',
+            contrastText: '#00261A',
           }
         : {
-            main: '#c27803',
-            dark: '#9e5e00',
-            light: '#df9420',
-            contrastText: '#ffffff',
+            main: '#96BF8A', // Brand Secondary Light Green
+            dark: '#739D67',
+            light: '#B2D4A8',
+            contrastText: '#002B1E',
           },
       background: {
-        default: isDark ? '#0b1120' : '#f8fafc',
-        paper: isDark ? '#111827' : '#ffffff',
+        default: isDark ? '#081712' : '#E8EAE5', // Brand Background Canvas
+        paper: isDark ? '#0F261E' : '#FFFFFF',   // Brand Surface/Cards
       },
       text: {
-        primary: isDark ? '#f8fafc' : '#0f172a',
-        secondary: isDark ? '#94a3b8' : '#334155',
+        primary: isDark ? '#F1F5F3' : '#0B1C16',
+        secondary: isDark ? '#9EB3A9' : '#455A52',
       },
-      divider: isDark ? '#1e293b' : '#e2e8f0',
+      divider: isDark ? 'rgba(150, 191, 138, 0.15)' : 'rgba(0, 65, 46, 0.12)',
+      warning: {
+        main: '#D97706',
+        light: '#FEF3C7',
+        dark: '#B45309',
+        contrastText: '#78350F',
+      },
+      info: {
+        main: '#00412E',
+        light: '#E6F0EB',
+        dark: '#002C1F',
+        contrastText: '#FFFFFF',
+      },
+      success: {
+        main: '#15803D',
+        light: '#DCFCE7',
+        dark: '#166534',
+        contrastText: '#FFFFFF',
+      },
+      error: {
+        main: '#DC2626',
+        light: '#FEE2E2',
+        dark: '#991B1B',
+        contrastText: '#FFFFFF',
+      },
     },
     typography: {
       fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-      fontSize: 16,
+      fontSize: 15,
       h3: {
         fontWeight: 800,
-        fontSize: '2.5rem',
+        fontSize: '2.3rem',
         letterSpacing: '-0.02em',
       },
       h4: {
         fontWeight: 800,
-        fontSize: '2.1rem',
+        fontSize: '1.9rem',
         letterSpacing: '-0.02em',
       },
       h5: {
         fontWeight: 700,
-        fontSize: '1.6rem',
+        fontSize: '1.5rem',
         letterSpacing: '-0.01em',
       },
       h6: {
         fontWeight: 700,
-        fontSize: '1.3rem',
+        fontSize: '1.2rem',
       },
       subtitle1: {
-        fontSize: '1.15rem',
-        fontWeight: 600,
-        lineHeight: 1.5,
-      },
-      subtitle2: {
         fontSize: '1.05rem',
         fontWeight: 600,
         lineHeight: 1.5,
       },
-      body1: {
-        fontSize: '1.08rem',
-        lineHeight: 1.65,
+      subtitle2: {
+        fontSize: '0.95rem',
+        fontWeight: 600,
+        lineHeight: 1.5,
       },
-      body2: {
+      body1: {
         fontSize: '1rem',
         lineHeight: 1.6,
       },
+      body2: {
+        fontSize: '0.92rem',
+        lineHeight: 1.55,
+      },
       button: {
         textTransform: 'none',
-        fontWeight: 600,
-        fontSize: '1rem',
+        fontWeight: 700,
+        fontSize: '0.95rem',
       },
       caption: {
-        fontSize: '0.9rem',
-        lineHeight: 1.5,
+        fontSize: '0.82rem',
+        lineHeight: 1.4,
       },
     },
     shape: {
-      borderRadius: 12,
+      borderRadius: 14,
     },
     components: {
       MuiButton: {
         styleOverrides: {
           root: {
-            borderRadius: 8,
+            borderRadius: 10,
             boxShadow: 'none',
             textTransform: 'none',
+            fontWeight: 700,
+            transition: 'all 0.18s ease-in-out',
             '&:hover': {
-              boxShadow: '0 2px 6px rgba(0,0,0,0.15)',
+              boxShadow: '0 4px 12px rgba(0, 65, 46, 0.18)',
+              transform: 'translateY(-1px)',
+            },
+            '&:active': {
+              transform: 'translateY(0)',
+            },
+          },
+          containedPrimary: {
+            backgroundColor: isDark ? '#96BF8A' : '#00412E',
+            color: isDark ? '#00261A' : '#FFFFFF',
+            '&:hover': {
+              backgroundColor: isDark ? '#B5D6AB' : '#002C1F',
+            },
+          },
+          containedSecondary: {
+            backgroundColor: '#96BF8A',
+            color: '#002B1E',
+            '&:hover': {
+              backgroundColor: '#82AB76',
             },
           },
         },
@@ -111,9 +155,21 @@ export function getAppTheme(mode: 'light' | 'dark'): Theme {
       MuiCard: {
         styleOverrides: {
           root: {
-            borderRadius: 14,
-            border: `1px solid ${isDark ? '#1e293b' : '#e2e8f0'}`,
-            boxShadow: isDark ? '0 4px 16px rgba(0,0,0,0.3)' : '0 2px 8px rgba(0,0,0,0.04)',
+            borderRadius: 16,
+            backgroundColor: isDark ? '#0F261E' : '#FFFFFF',
+            border: `1px solid ${isDark ? 'rgba(150, 191, 138, 0.12)' : 'rgba(0, 65, 46, 0.08)'}`,
+            boxShadow: isDark
+              ? '0 6px 20px rgba(0, 0, 0, 0.35)'
+              : '0 4px 18px rgba(0, 65, 46, 0.04)',
+            transition: 'box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s ease',
+          },
+        },
+      },
+      MuiChip: {
+        styleOverrides: {
+          root: {
+            borderRadius: 8,
+            fontWeight: 700,
           },
         },
       },
@@ -124,6 +180,27 @@ export function getAppTheme(mode: 'light' | 'dark'): Theme {
           },
         },
       },
+      MuiTextField: {
+        styleOverrides: {
+          root: {
+            '& .MuiOutlinedInput-root': {
+              borderRadius: 10,
+              backgroundColor: isDark ? 'rgba(255, 255, 255, 0.03)' : '#FFFFFF',
+              '& fieldset': {
+                borderColor: isDark ? 'rgba(150, 191, 138, 0.2)' : 'rgba(0, 65, 46, 0.16)',
+              },
+              '&:hover fieldset': {
+                borderColor: isDark ? '#96BF8A' : '#00412E',
+              },
+              '&.Mui-focused fieldset': {
+                borderColor: isDark ? '#96BF8A' : '#00412E',
+                borderWidth: '2px',
+              },
+            },
+          },
+        },
+      },
     },
   })
 }
+

@@ -63,26 +63,28 @@ export default function PortalOverview({
         sx={{
           p: { xs: 4, sm: 6, md: 7 },
           borderRadius: 4,
-          background: 'linear-gradient(135deg, #176b57 0%, #0c3e32 100%)',
+          background: 'linear-gradient(135deg, #00412E 0%, #00261A 100%)',
           color: '#ffffff',
           mb: 5,
           position: 'relative',
           overflow: 'hidden',
-          boxShadow: '0 8px 24px rgba(23, 107, 87, 0.18)',
+          boxShadow: '0 8px 30px rgba(0, 65, 46, 0.22)',
         }}
       >
         <Stack spacing={3} sx={{ position: 'relative', zIndex: 1, maxWidth: 1100 }}>
           <Box
             sx={{
               display: 'inline-block',
-              bgcolor: 'rgba(255,255,255,0.18)',
+              bgcolor: 'rgba(150, 191, 138, 0.2)',
+              color: '#96BF8A',
               px: 2,
               py: 0.8,
               borderRadius: '30px',
               width: 'fit-content',
               fontSize: '0.95rem',
-              fontWeight: 700,
+              fontWeight: 800,
               letterSpacing: '0.06em',
+              border: '1px solid rgba(150, 191, 138, 0.3)',
             }}
           >
             COUNTY GOVERNMENT OF MURANG'A
@@ -116,14 +118,14 @@ export default function PortalOverview({
               size="large"
               onClick={isAuthenticated ? onNavigateToSubmit : onOpenAuth}
               sx={{
-                bgcolor: '#ffffff',
-                color: '#0f483a',
+                bgcolor: '#96BF8A',
+                color: '#00261A',
                 fontWeight: 800,
                 fontSize: '1.15rem',
                 py: 1.6,
                 px: 4.5,
                 borderRadius: '10px',
-                '&:hover': { bgcolor: '#f1f5f9', transform: 'translateY(-1px)' },
+                '&:hover': { bgcolor: '#B5D6AB', transform: 'translateY(-1px)' },
               }}
             >
               Submit Service Request
