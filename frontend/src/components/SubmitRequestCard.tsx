@@ -63,6 +63,7 @@ export default function SubmitRequestCard({
   const [imageUrl, setImageUrl] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [fieldErrors, setFieldErrors] = useState<{ location?: string; description?: string; imageUrl?: string }>({})
   const [createdRequest, setCreatedRequest] = useState<ServiceRequest | null>(null)
   const [copied, setCopied] = useState(false)
 
@@ -85,14 +86,28 @@ export default function SubmitRequestCard({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError(null)
+    setFieldErrors({})
 
-    if (description.trim().length < 10) {
-      setError('Description must be at least 10 characters long.')
-      return
+    const newErrors: { location?: string; description?: string; imageUrl?: string } = {}
+    if (!location.trim()) {
+      newErrors.location = 'Location / Ward is required.'
+    }
+    if (!description.trim()) {
+      newErrors.description = 'Incident description is required.'
+    } else if (description.trim().length < 10) {
+      newErrors.description = 'Description must be at least 10 characters long.'
+    }
+    if (imageUrl.trim()) {
+      try {
+        new URL(imageUrl.trim())
+      } catch {
+        newErrors.imageUrl = 'Image URL must be a valid http or https link.'
+      }
     }
 
-    if (!location.trim()) {
-      setError('Location / Ward is required.')
+    if (Object.keys(newErrors).length > 0) {
+      setFieldErrors(newErrors)
+      setError(Object.values(newErrors).join(' • '))
       return
     }
 
@@ -114,6 +129,10 @@ export default function SubmitRequestCard({
       setImageUrl('')
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Failed to submit service request'
+      const customErr = err as { fieldErrors?: Record<string, string> }
+      if (customErr.fieldErrors) {
+        setFieldErrors(customErr.fieldErrors)
+      }
       setError(msg)
     } finally {
       setSubmitting(false)
@@ -224,15 +243,19 @@ export default function SubmitRequestCard({
                     required
                     fullWidth
                     value={location}
-                    onChange={(e) => setLocation(e.target.value)}
+                    onChange={(e) => {
+                      setLocation(e.target.value)
+                      if (fieldErrors.location) setFieldErrors((p) => ({ ...p, location: undefined }))
+                    }}
+                    error={Boolean(fieldErrors.location)}
+                    helperText={fieldErrors.location || "Provide specific landmarks so county engineers or inspectors can locate the site"}
                     placeholder="e.g. Kiharu Ward, near Murang'a General Hospital bypass"
-                    helperText="Provide specific landmarks so county engineers or inspectors can locate the site"
                   />
                 </Grid>
               </Grid>
 
               {/* Quick location tag suggestions */}
-              <Box sx={{ bgcolor: '#f8fafc', p: 2.5, borderRadius: 2.5, border: '1px solid #e2e8f0' }}>
+              <Box sx={{ bgcolor: 'background.default', p: 2.5, borderRadius: 2.5, border: '1px solid', borderColor: 'divider' }}>
                 <Typography variant="subtitle2" sx={{ color: 'text.secondary', fontWeight: 700, mb: 1.2, fontSize: '0.95rem' }}>
                   Quick Fill: Sub-Counties & Wards (Click to insert):
                 </Typography>
@@ -241,19 +264,23 @@ export default function SubmitRequestCard({
                     <Box
                       key={loc}
                       component="span"
-                      onClick={() => setLocation(loc)}
+                      onClick={() => {
+                        setLocation(loc)
+                        if (fieldErrors.location) setFieldErrors((p) => ({ ...p, location: undefined }))
+                      }}
                       sx={{
                         fontSize: '0.9rem',
-                        bgcolor: '#ffffff',
+                        bgcolor: 'background.paper',
                         px: 1.5,
                         py: 0.6,
                         borderRadius: '8px',
                         cursor: 'pointer',
-                        color: 'primary.dark',
+                        color: 'primary.main',
                         fontWeight: 600,
-                        border: '1px solid #cbd5e1',
+                        border: '1px solid',
+                        borderColor: 'divider',
                         transition: 'all 0.15s ease',
-                        '&:hover': { bgcolor: 'primary.main', color: '#ffffff', borderColor: 'primary.main' },
+                        '&:hover': { bgcolor: 'primary.main', color: 'primary.contrastText', borderColor: 'primary.main' },
                       }}
                     >
                       + {loc}
@@ -269,19 +296,29 @@ export default function SubmitRequestCard({
                 rows={5}
                 fullWidth
                 value={description}
-                onChange={(e) => setDescription(e.target.value)}
+                onChange={(e) => {
+                  setDescription(e.target.value)
+                  if (fieldErrors.description) setFieldErrors((p) => ({ ...p, description: undefined }))
+                }}
                 placeholder="Describe the issue in detail: what happened, when it started, and how it impacts the community..."
-                helperText={`${description.trim().length} / 2000 characters (minimum 10 characters required)`}
-                error={description.length > 0 && description.trim().length < 10}
+                helperText={
+                  fieldErrors.description ||
+                  `${description.trim().length} / 2000 characters (minimum 10 characters required)`
+                }
+                error={Boolean(fieldErrors.description) || (description.length > 0 && description.trim().length < 10)}
               />
 
               <TextField
                 label="Optional Photo Evidence URL"
                 fullWidth
                 value={imageUrl}
-                onChange={(e) => setImageUrl(e.target.value)}
+                onChange={(e) => {
+                  setImageUrl(e.target.value)
+                  if (fieldErrors.imageUrl) setFieldErrors((p) => ({ ...p, imageUrl: undefined }))
+                }}
                 placeholder="https://example.com/photos/road-damage.jpg"
-                helperText="Provide an image link documenting the issue (e.g. damaged culvert, leaking pipe)"
+                error={Boolean(fieldErrors.imageUrl)}
+                helperText={fieldErrors.imageUrl || "Provide an image link documenting the issue (e.g. damaged culvert, leaking pipe)"}
               />
 
               {imageUrl && (

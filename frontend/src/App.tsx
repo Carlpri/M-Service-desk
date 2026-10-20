@@ -10,7 +10,12 @@ const SubmitRequestCard = lazy(() => import('./components/SubmitRequestCard'))
 const CitizenRequestsList = lazy(() => import('./components/CitizenRequestsList'))
 const AdminDashboard = lazy(() => import('./components/AdminDashboard'))
 
-export default function App() {
+type AppProps = {
+  darkMode?: boolean
+  onToggleTheme?: () => void
+}
+
+export default function App({ darkMode = false, onToggleTheme }: AppProps) {
   const [currentTab, setCurrentTab] = useState(0)
   const [authDialogOpen, setAuthDialogOpen] = useState(false)
   const [token, setToken] = useState<string | null>(() => localStorage.getItem('m_service_token'))
@@ -89,6 +94,8 @@ export default function App() {
         health={health}
         onOpenAuth={() => setAuthDialogOpen(true)}
         onLogout={handleLogout}
+        darkMode={darkMode}
+        onToggleTheme={onToggleTheme}
       />
 
       <Container maxWidth={false} component="main" sx={{ flexGrow: 1, py: 3, px: { xs: 2, sm: 4, md: 6, lg: 8, xl: 10 } }}>
@@ -151,8 +158,9 @@ export default function App() {
           py: 3,
           px: 2,
           mt: 'auto',
-          borderTop: '1px solid #e2e8f0',
-          bgcolor: '#ffffff',
+          borderTop: '1px solid',
+          borderColor: 'divider',
+          bgcolor: 'background.paper',
           textAlign: 'center',
         }}
       >

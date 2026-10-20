@@ -1,21 +1,36 @@
 import { z } from 'zod'
 
-const emailSchema = z.string().trim().email().max(254).transform((email) => email.toLowerCase())
+const emailSchema = z
+  .string({ required_error: 'Email address is required' })
+  .trim()
+  .email('Invalid email address')
+  .max(254, 'Email must be at most 254 characters')
+  .transform((email) => email.toLowerCase())
 
 export const registerSchema = z.object({
-  name: z.string().trim().min(1).max(100),
+  name: z
+    .string({ required_error: 'Full name is required' })
+    .trim()
+    .min(1, 'Full name is required')
+    .max(100, 'Full name must be at most 100 characters'),
   email: emailSchema,
-  password: z.string().min(12).max(128),
+  password: z
+    .string({ required_error: 'Password is required' })
+    .min(12, 'Password must be at least 12 characters')
+    .max(128, 'Password must be at most 128 characters'),
 })
 
 export const loginSchema = z.object({
   email: emailSchema,
-  password: z.string().min(1).max(128),
+  password: z
+    .string({ required_error: 'Password is required' })
+    .min(1, 'Password is required')
+    .max(128, 'Password must be at most 128 characters'),
 })
 
 export const changePasswordSchema = z.object({
-  currentPassword: z.string().min(1).max(128),
-  newPassword: z.string().min(12).max(128),
+  currentPassword: z.string().min(1, 'Current password is required').max(128),
+  newPassword: z.string().min(12, 'New password must be at least 12 characters').max(128),
 })
 
 export const requestTokenSchema = z.object({

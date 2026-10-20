@@ -65,6 +65,7 @@ export default function AdminDashboard({ token, user, onOpenAuth }: AdminDashboa
   const [updating, setUpdating] = useState(false)
   const [updateError, setUpdateError] = useState<string | null>(null)
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
+  const [dashboardError, setDashboardError] = useState<string | null>(null)
 
   const fetchAnalytics = async () => {
     if (!token) return
@@ -72,8 +73,9 @@ export default function AdminDashboard({ token, user, onOpenAuth }: AdminDashboa
     try {
       const response = await getAdminAnalytics(token)
       setAnalytics(response.analytics)
-    } catch (err) {
-      console.error('Analytics load error:', err)
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Failed to load analytics KPIs'
+      setDashboardError(msg)
     } finally {
       setAnalyticsLoading(false)
     }
@@ -88,8 +90,9 @@ export default function AdminDashboard({ token, user, onOpenAuth }: AdminDashboa
         search: search.trim() || undefined,
       })
       setRequests(response.requests)
-    } catch (err) {
-      console.error('Requests load error:', err)
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Failed to load service requests'
+      setDashboardError(msg)
     } finally {
       setRequestsLoading(false)
     }
@@ -101,8 +104,9 @@ export default function AdminDashboard({ token, user, onOpenAuth }: AdminDashboa
     try {
       const response = await getAdminUsers(token)
       setUsers(response.users)
-    } catch (err) {
-      console.error('Users load error:', err)
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Failed to load registered users'
+      setDashboardError(msg)
     } finally {
       setUsersLoading(false)
     }
@@ -201,6 +205,16 @@ export default function AdminDashboard({ token, user, onOpenAuth }: AdminDashboa
           Refresh Data
         </Button>
       </Stack>
+
+      {dashboardError && (
+        <Alert
+          severity="error"
+          onClose={() => setDashboardError(null)}
+          sx={{ mb: 4, borderRadius: 3, fontSize: '1.08rem', py: 1.5 }}
+        >
+          {dashboardError}
+        </Alert>
+      )}
 
       {successMessage && (
         <Alert severity="success" sx={{ mb: 4, borderRadius: 3, fontSize: '1.08rem', py: 1.5 }}>

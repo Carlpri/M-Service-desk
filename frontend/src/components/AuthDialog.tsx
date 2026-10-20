@@ -31,6 +31,7 @@ export default function AuthDialog({ open, onClose, onSuccess }: AuthDialogProps
   const [loginPassword, setLoginPassword] = useState('')
   const [loginLoading, setLoginLoading] = useState(false)
   const [loginError, setLoginError] = useState<string | null>(null)
+  const [loginFieldErrors, setLoginFieldErrors] = useState<{ email?: string; password?: string }>({})
 
   // Registration form state
   const [regName, setRegName] = useState('')
@@ -38,11 +39,30 @@ export default function AuthDialog({ open, onClose, onSuccess }: AuthDialogProps
   const [regPassword, setRegPassword] = useState('')
   const [regLoading, setRegLoading] = useState(false)
   const [regError, setRegError] = useState<string | null>(null)
+  const [regFieldErrors, setRegFieldErrors] = useState<{ name?: string; email?: string; password?: string }>({})
   const [regSuccess, setRegSuccess] = useState<string | null>(null)
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoginError(null)
+    setLoginFieldErrors({})
+
+    const errors: { email?: string; password?: string } = {}
+    if (!loginEmail.trim()) {
+      errors.email = 'Email address is required.'
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(loginEmail.trim())) {
+      errors.email = 'Please enter a valid email address.'
+    }
+    if (!loginPassword) {
+      errors.password = 'Password is required.'
+    }
+
+    if (Object.keys(errors).length > 0) {
+      setLoginFieldErrors(errors)
+      setLoginError(Object.values(errors).join(' • '))
+      return
+    }
+
     setLoginLoading(true)
 
     try {
@@ -54,7 +74,17 @@ export default function AuthDialog({ open, onClose, onSuccess }: AuthDialogProps
       onClose()
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Login failed. Please check your credentials.'
-      setLoginError(message)
+      const customErr = err as { code?: string; fieldErrors?: Record<string, string> }
+
+      if (customErr.code === 'INVALID_CREDENTIALS' || message.toLowerCase().includes('incorrect')) {
+        setLoginFieldErrors({
+          email: 'Invalid credentials',
+          password: 'Check your password',
+        })
+        setLoginError('Incorrect email or password. Please verify your credentials or register an account.')
+      } else {
+        setLoginError(message)
+      }
     } finally {
       setLoginLoading(false)
     }
@@ -62,8 +92,28 @@ export default function AuthDialog({ open, onClose, onSuccess }: AuthDialogProps
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (regPassword.length < 12) {
-      setRegError('Password must be at least 12 characters long.')
+    setRegError(null)
+    setRegSuccess(null)
+    setRegFieldErrors({})
+
+    const errors: { name?: string; email?: string; password?: string } = {}
+    if (!regName.trim()) {
+      errors.name = 'Full name is required.'
+    }
+    if (!regEmail.trim()) {
+      errors.email = 'Email address is required.'
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(regEmail.trim())) {
+      errors.email = 'Please enter a valid email address (e.g. name@example.com).'
+    }
+    if (!regPassword) {
+      errors.password = 'Password is required.'
+    } else if (regPassword.length < 12) {
+      errors.password = 'Password must be at least 12 characters long.'
+    }
+
+    if (Object.keys(errors).length > 0) {
+      setRegFieldErrors(errors)
+      setRegError(Object.values(errors).join(' • '))
       return
     }
 
@@ -78,7 +128,26 @@ export default function AuthDialog({ open, onClose, onSuccess }: AuthDialogProps
       setRegSuccess(response.message || 'Registration successful! Your citizen account has been created.')
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Registration failed'
-      setRegError(message)
+      const customErr = err as { code?: string; fieldErrors?: Record<string, string> }
+      const newFieldErrors: { name?: string; email?: string; password?: string } = {}
+
+      if (customErr.fieldErrors) {
+        if (customErr.fieldErrors.name) newFieldErrors.name = customErr.fieldErrors.name
+        if (customErr.fieldErrors.email) newFieldErrors.email = customErr.fieldErrors.email
+        if (customErr.fieldErrors.password) newFieldErrors.password = customErr.fieldErrors.password
+      }
+
+      if (customErr.code === 'EMAIL_ALREADY_REGISTERED' || message.toLowerCase().includes('already exists')) {
+        newFieldErrors.email = 'An account with this email already exists.'
+        setRegError('This email is already registered. Please sign in or use another email.')
+      } else if (message.toLowerCase().includes('password')) {
+        newFieldErrors.password = message
+        setRegError(message)
+      } else {
+        setRegError(message)
+      }
+
+      setRegFieldErrors(newFieldErrors)
     } finally {
       setRegLoading(false)
     }
@@ -137,7 +206,12 @@ export default function AuthDialog({ open, onClose, onSuccess }: AuthDialogProps
                 required
                 fullWidth
                 value={loginEmail}
-                onChange={(e) => setLoginEmail(e.target.value)}
+                onChange={(e) => {
+                  setLoginEmail(e.target.value)
+                  if (loginFieldErrors.email) setLoginFieldErrors((p) => ({ ...p, email: undefined }))
+                }}
+                error={Boolean(loginFieldErrors.email)}
+                helperText={loginFieldErrors.email}
                 placeholder="e.g. amina@example.com"
                 size="medium"
               />
@@ -148,7 +222,12 @@ export default function AuthDialog({ open, onClose, onSuccess }: AuthDialogProps
                 required
                 fullWidth
                 value={loginPassword}
-                onChange={(e) => setLoginPassword(e.target.value)}
+                onChange={(e) => {
+                  setLoginPassword(e.target.value)
+                  if (loginFieldErrors.password) setLoginFieldErrors((p) => ({ ...p, password: undefined }))
+                }}
+                error={Boolean(loginFieldErrors.password)}
+                helperText={loginFieldErrors.password}
                 placeholder="Enter account password (minimum 12 characters)"
                 size="medium"
               />
@@ -186,7 +265,12 @@ export default function AuthDialog({ open, onClose, onSuccess }: AuthDialogProps
                 required
                 fullWidth
                 value={regName}
-                onChange={(e) => setRegName(e.target.value)}
+                onChange={(e) => {
+                  setRegName(e.target.value)
+                  if (regFieldErrors.name) setRegFieldErrors((p) => ({ ...p, name: undefined }))
+                }}
+                error={Boolean(regFieldErrors.name)}
+                helperText={regFieldErrors.name}
                 placeholder="e.g. Amina Citizen"
                 size="medium"
               />
@@ -197,7 +281,12 @@ export default function AuthDialog({ open, onClose, onSuccess }: AuthDialogProps
                 required
                 fullWidth
                 value={regEmail}
-                onChange={(e) => setRegEmail(e.target.value)}
+                onChange={(e) => {
+                  setRegEmail(e.target.value)
+                  if (regFieldErrors.email) setRegFieldErrors((p) => ({ ...p, email: undefined }))
+                }}
+                error={Boolean(regFieldErrors.email)}
+                helperText={regFieldErrors.email}
                 placeholder="e.g. amina@example.com"
                 size="medium"
               />
@@ -208,8 +297,12 @@ export default function AuthDialog({ open, onClose, onSuccess }: AuthDialogProps
                 required
                 fullWidth
                 value={regPassword}
-                onChange={(e) => setRegPassword(e.target.value)}
-                helperText="Phase 2 policy: Argon2id hashed; must be 12 to 128 characters"
+                onChange={(e) => {
+                  setRegPassword(e.target.value)
+                  if (regFieldErrors.password) setRegFieldErrors((p) => ({ ...p, password: undefined }))
+                }}
+                error={Boolean(regFieldErrors.password)}
+                helperText={regFieldErrors.password || 'Phase 2 policy: Argon2id hashed; must be 12 to 128 characters'}
                 size="medium"
               />
 

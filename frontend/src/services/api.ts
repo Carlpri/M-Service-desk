@@ -8,7 +8,28 @@ import type {
   UserProfile,
 } from '../types/api'
 
-const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000'
+function resolveApiBaseUrl(): string {
+  const configured = import.meta.env.VITE_API_URL
+  if (configured && !configured.includes('localhost')) {
+    return configured.replace(/\/+$/, '')
+  }
+
+  if (typeof window !== 'undefined') {
+    const host = window.location.hostname
+    // If running on Vercel or public domain, connect to the deployed Render backend
+    if (host.endsWith('vercel.app') || (!host.includes('localhost') && !host.includes('127.0.0.1') && !host.startsWith('192.168.') && !host.startsWith('10.') && !host.startsWith('172.'))) {
+      return 'https://m-service-desk.onrender.com'
+    }
+    // If running on local LAN Wi-Fi (e.g. 192.168.0.104), connect to host machine backend
+    if (host !== 'localhost' && host !== '127.0.0.1') {
+      return `${window.location.protocol}//${host}:3000`
+    }
+  }
+
+  return 'http://localhost:3000'
+}
+
+const apiBaseUrl = resolveApiBaseUrl()
 
 async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   const url = `${apiBaseUrl}${path}`
@@ -18,34 +39,51 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
     headers.set('Content-Type', 'application/json')
   }
 
-  const response = await fetch(url, {
-    ...options,
-    headers,
-  })
+  let response: Response
+  try {
+    response = await fetch(url, {
+      ...options,
+      headers,
+    })
+  } catch {
+    const isOffline = typeof navigator !== 'undefined' && !navigator.onLine
+    if (isOffline) {
+      throw new Error('You are currently offline. Please check your internet connection.')
+    }
+    throw new Error('Unable to connect to M-Service Desk server. Please check your network or try again shortly.')
+  }
 
   const contentType = response.headers.get('content-type')
   const isJson = contentType && contentType.includes('application/json')
   const data = isJson ? await response.json() : null
 
   if (!response.ok) {
+    const detailsMap: Record<string, string> = {}
+    if (Array.isArray(data?.details)) {
+      for (const d of data.details) {
+        if (d.path && d.path.length > 0) {
+          detailsMap[String(d.path[0])] = d.message
+        }
+      }
+    }
+
     const detailsMessage =
       Array.isArray(data?.details) && data.details.length > 0
         ? data.details
-            .map((d: { path?: (string | number)[]; message: string }) => {
-              const field = d.path && d.path.length > 0 ? `${d.path.join('.')}: ` : ''
-              return `${field}${d.message}`
-            })
-            .join('; ')
+            .map((d: { path?: (string | number)[]; message: string }) => d.message)
+            .join(' • ')
         : null
 
     const errorMessage =
-      detailsMessage ||
       data?.message ||
+      detailsMessage ||
       data?.error ||
       `Request failed with status ${response.status}`
+
     const error = new Error(errorMessage)
-    ;(error as unknown as { status: number; code?: string }).status = response.status
-    ;(error as unknown as { status: number; code?: string }).code = data?.error
+    ;(error as unknown as { status: number; code?: string; fieldErrors?: Record<string, string> }).status = response.status
+    ;(error as unknown as { status: number; code?: string; fieldErrors?: Record<string, string> }).code = data?.error
+    ;(error as unknown as { status: number; code?: string; fieldErrors?: Record<string, string> }).fieldErrors = detailsMap
     throw error
   }
 
