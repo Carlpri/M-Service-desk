@@ -334,8 +334,8 @@ export default function AuthDialog({ open, onClose, onSuccess }: AuthDialogProps
             </Typography>
 
             <Stack spacing={2}>
-              <Box sx={{ p: 2, bgcolor: '#f1f5f9', borderRadius: '4px' }}>
-                <Typography variant="subtitle2" sx={{ fontWeight: 800, display: 'block', color: 'primary.dark', fontSize: '1.05rem' }}>
+              <Box sx={{ p: 2, bgcolor: (t) => (t.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.03)' : '#f1f5f9'), borderRadius: '4px', border: '1px solid', borderColor: 'divider' }}>
+                <Typography variant="subtitle2" sx={{ fontWeight: 800, display: 'block', color: 'primary.main', fontSize: '1.05rem' }}>
                   1. Opaque Session Tokens
                 </Typography>
                 <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.95rem', mt: 0.5 }}>
@@ -343,8 +343,8 @@ export default function AuthDialog({ open, onClose, onSuccess }: AuthDialogProps
                 </Typography>
               </Box>
 
-              <Box sx={{ p: 2, bgcolor: '#f1f5f9', borderRadius: '4px' }}>
-                <Typography variant="subtitle2" sx={{ fontWeight: 800, display: 'block', color: 'primary.dark', fontSize: '1.05rem' }}>
+              <Box sx={{ p: 2, bgcolor: (t) => (t.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.03)' : '#f1f5f9'), borderRadius: '4px', border: '1px solid', borderColor: 'divider' }}>
+                <Typography variant="subtitle2" sx={{ fontWeight: 800, display: 'block', color: 'primary.main', fontSize: '1.05rem' }}>
                   2. Role Enforcement
                 </Typography>
                 <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.95rem', mt: 0.5 }}>
@@ -352,8 +352,8 @@ export default function AuthDialog({ open, onClose, onSuccess }: AuthDialogProps
                 </Typography>
               </Box>
 
-              <Box sx={{ p: 2, bgcolor: '#f1f5f9', borderRadius: '4px' }}>
-                <Typography variant="subtitle2" sx={{ fontWeight: 800, display: 'block', color: 'primary.dark', fontSize: '1.05rem' }}>
+              <Box sx={{ p: 2, bgcolor: (t) => (t.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.03)' : '#f1f5f9'), borderRadius: '4px', border: '1px solid', borderColor: 'divider' }}>
+                <Typography variant="subtitle2" sx={{ fontWeight: 800, display: 'block', color: 'primary.main', fontSize: '1.05rem' }}>
                   3. Session Invalidation
                 </Typography>
                 <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.95rem', mt: 0.5 }}>

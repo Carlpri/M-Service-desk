@@ -208,22 +208,22 @@ export default function SubmitRequestCard({
           sx={{
             p: 3,
             mb: 3,
-            bgcolor: '#ecfdf5',
-            border: '1.5px solid #6ee7b7',
+            bgcolor: (t) => (t.palette.mode === 'dark' ? 'rgba(5, 150, 105, 0.15)' : '#ecfdf5'),
+            border: (t) => `1.5px solid ${t.palette.mode === 'dark' ? 'rgba(110, 231, 183, 0.4)' : '#6ee7b7'}`,
           }}
         >
           <Stack spacing={2}>
-            <Typography variant="h5" sx={{ fontWeight: 800, color: '#065f46' }}>
+            <Typography variant="h5" sx={{ fontWeight: 800, color: (t) => (t.palette.mode === 'dark' ? '#6ee7b7' : '#065f46') }}>
               ✓ Service Request Successfully Submitted!
             </Typography>
-            <Typography variant="body1" sx={{ color: '#047857', fontSize: '1.15rem' }}>
+            <Typography variant="body1" sx={{ color: (t) => (t.palette.mode === 'dark' ? '#a7f3d0' : '#047857'), fontSize: '1.15rem' }}>
               Your report has been registered on the County Service Desk. Keep this reference number to monitor field actions:
             </Typography>
 
             <Stack direction="row" alignItems="center" spacing={2} sx={{ pt: 1 }}>
               <Box
                 sx={{
-                  bgcolor: '#ffffff',
+                  bgcolor: (t) => (t.palette.mode === 'dark' ? 'background.paper' : '#ffffff'),
                   px: 2.5,
                   py: 1.2,
                   borderRadius: '4px',
@@ -231,7 +231,7 @@ export default function SubmitRequestCard({
                   fontFamily: 'monospace',
                   fontWeight: 800,
                   fontSize: '1.3rem',
-                  color: '#065f46',
+                  color: (t) => (t.palette.mode === 'dark' ? '#6ee7b7' : '#065f46'),
                 }}
               >
                 {createdRequest.referenceNumber}
@@ -361,7 +361,7 @@ export default function SubmitRequestCard({
               />
 
               {/* Photo Evidence Section */}
-              <Box sx={{ p: 2.5, bgcolor: '#f8fafc', borderRadius: '6px', border: '1px solid #e2e8f0' }}>
+              <Box sx={{ p: 2.5, bgcolor: (t) => (t.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.02)' : '#f8fafc'), borderRadius: '6px', border: '1px solid', borderColor: 'divider' }}>
                 <Stack direction={{ xs: 'column', sm: 'row' }} justifyContent="space-between" alignItems={{ xs: 'flex-start', sm: 'center' }} spacing={1.5} sx={{ mb: 2 }}>
                   <Box>
                     <Typography variant="subtitle1" sx={{ fontWeight: 800, color: 'text.primary', fontSize: '1.05rem' }}>
@@ -417,9 +417,9 @@ export default function SubmitRequestCard({
                       <Box
                         sx={{
                           p: 2.5,
-                          bgcolor: '#ffffff',
+                          bgcolor: (t) => (t.palette.mode === 'dark' ? 'background.paper' : '#ffffff'),
                           borderRadius: '6px',
-                          border: '1.5px solid #059669',
+                          border: (t) => `1.5px solid ${t.palette.mode === 'dark' ? '#10B981' : '#059669'}`,
                           textAlign: 'center',
                         }}
                       >
@@ -443,7 +443,13 @@ export default function SubmitRequestCard({
                             <Chip
                               label="✓ Ready & Optimized with Cloudinary"
                               size="small"
-                              sx={{ bgcolor: '#ecfdf5', color: '#047857', fontWeight: 700, border: '1px solid #6ee7b7' }}
+                              sx={{
+                                bgcolor: (t) => (t.palette.mode === 'dark' ? 'rgba(16, 185, 129, 0.15)' : '#ecfdf5'),
+                                color: (t) => (t.palette.mode === 'dark' ? '#6ee7b7' : '#047857'),
+                                fontWeight: 700,
+                                border: '1px solid',
+                                borderColor: (t) => (t.palette.mode === 'dark' ? 'rgba(110, 231, 183, 0.3)' : '#6ee7b7'),
+                              }}
                             />
                             {uploadedFileName && (
                               <Typography variant="body2" sx={{ fontWeight: 600, color: 'text.primary', wordBreak: 'break-all' }}>
@@ -499,15 +505,24 @@ export default function SubmitRequestCard({
                         sx={{
                           p: { xs: 3, sm: 4 },
                           border: '2px dashed',
-                          borderColor: isDragOver ? 'primary.main' : '#cbd5e1',
-                          bgcolor: isDragOver ? '#f0fdf4' : '#ffffff',
+                          borderColor: isDragOver
+                            ? 'primary.main'
+                            : (t) => (t.palette.mode === 'dark' ? 'rgba(150, 191, 138, 0.25)' : '#cbd5e1'),
+                          bgcolor: (t) =>
+                            isDragOver
+                              ? t.palette.mode === 'dark'
+                                ? 'rgba(150, 191, 138, 0.1)'
+                                : '#f0fdf4'
+                              : t.palette.mode === 'dark'
+                                ? 'rgba(255, 255, 255, 0.02)'
+                                : '#ffffff',
                           borderRadius: '6px',
                           textAlign: 'center',
                           cursor: uploadingImage ? 'default' : 'pointer',
                           transition: 'all 0.2s ease',
                           '&:hover': {
-                            borderColor: uploadingImage ? '#cbd5e1' : 'primary.main',
-                            bgcolor: uploadingImage ? '#ffffff' : '#f8fafc',
+                            borderColor: uploadingImage ? undefined : 'primary.main',
+                            bgcolor: (t) => (t.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.05)' : '#f8fafc'),
                           },
                         }}
                       >
@@ -531,7 +546,7 @@ export default function SubmitRequestCard({
                                 width: 54,
                                 height: 54,
                                 borderRadius: '50%',
-                                bgcolor: '#ecfdf5',
+                                bgcolor: (t) => (t.palette.mode === 'dark' ? 'rgba(150, 191, 138, 0.15)' : '#ecfdf5'),
                                 color: 'primary.main',
                                 display: 'flex',
                                 alignItems: 'center',

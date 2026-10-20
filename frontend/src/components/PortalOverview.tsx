@@ -169,7 +169,7 @@ export default function PortalOverview({
             { step: '04', title: 'Transparent Resolution', desc: 'Track live progress from Pending to In Progress to Resolved with official county notes.' },
           ].map((item) => (
             <Grid key={item.step} size={{ xs: 12, sm: 6, md: 3 }}>
-              <Card sx={{ height: '100%', p: 2, bgcolor: '#ffffff', border: '1px solid #e2e8f0', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
+              <Card sx={{ height: '100%', p: 2 }}>
                 <CardContent sx={{ p: 1 }}>
                   <Typography
                     variant="h4"

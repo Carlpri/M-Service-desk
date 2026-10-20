@@ -223,8 +223,22 @@ export default function CitizenRequestsList({
           sx={{
             p: 1.8,
             cursor: 'pointer',
-            bgcolor: statusFilter === 'ALL' ? '#E6F0EB' : '#FFFFFF',
-            border: `1.5px solid ${statusFilter === 'ALL' ? '#00412E' : 'rgba(0, 65, 46, 0.08)'}`,
+            bgcolor: (t) =>
+              statusFilter === 'ALL'
+                ? t.palette.mode === 'dark'
+                  ? 'rgba(150, 191, 138, 0.15)'
+                  : '#E6F0EB'
+                : 'background.paper',
+            border: (t) =>
+              `1.5px solid ${
+                statusFilter === 'ALL'
+                  ? t.palette.mode === 'dark'
+                    ? '#96BF8A'
+                    : '#00412E'
+                  : t.palette.mode === 'dark'
+                    ? 'rgba(150, 191, 138, 0.12)'
+                    : 'rgba(0, 65, 46, 0.08)'
+              }`,
             transition: 'transform 0.15s ease',
             '&:hover': { transform: 'translateY(-2px)' },
           }}
@@ -232,10 +246,10 @@ export default function CitizenRequestsList({
           <Typography variant="caption" sx={{ color: 'text.secondary', fontWeight: 800, textTransform: 'uppercase', fontSize: '0.7rem' }}>
             Total Logged
           </Typography>
-          <Typography variant="h4" sx={{ fontWeight: 900, color: '#00412E', my: 0.3, fontSize: { xs: '1.7rem', sm: '2rem' } }}>
+          <Typography variant="h4" sx={{ fontWeight: 900, color: 'text.primary', my: 0.3, fontSize: { xs: '1.7rem', sm: '2rem' } }}>
             {summaryMetrics.total}
           </Typography>
-          <Typography variant="caption" sx={{ color: '#00412E', fontWeight: 600, fontSize: '0.72rem' }}>
+          <Typography variant="caption" sx={{ color: 'text.secondary', fontWeight: 600, fontSize: '0.72rem' }}>
             All requests
           </Typography>
         </Card>
@@ -246,8 +260,20 @@ export default function CitizenRequestsList({
           sx={{
             p: 1.8,
             cursor: 'pointer',
-            bgcolor: statusFilter === 'PENDING' ? '#FEF3C7' : '#FFFFFF',
-            border: `1.5px solid ${statusFilter === 'PENDING' ? '#D97706' : 'rgba(217, 119, 6, 0.15)'}`,
+            bgcolor: (t) =>
+              statusFilter === 'PENDING'
+                ? t.palette.mode === 'dark'
+                  ? 'rgba(217, 119, 6, 0.2)'
+                  : '#FEF3C7'
+                : 'background.paper',
+            border: (t) =>
+              `1.5px solid ${
+                statusFilter === 'PENDING'
+                  ? '#D97706'
+                  : t.palette.mode === 'dark'
+                    ? 'rgba(217, 119, 6, 0.2)'
+                    : 'rgba(217, 119, 6, 0.15)'
+              }`,
             transition: 'transform 0.15s ease',
             '&:hover': { transform: 'translateY(-2px)' },
           }}
@@ -258,7 +284,7 @@ export default function CitizenRequestsList({
           <Typography variant="h4" sx={{ fontWeight: 900, color: '#D97706', my: 0.3, fontSize: { xs: '1.7rem', sm: '2rem' } }}>
             {summaryMetrics.pending}
           </Typography>
-          <Typography variant="caption" sx={{ color: '#B45309', fontWeight: 600, fontSize: '0.72rem' }}>
+          <Typography variant="caption" sx={{ color: (t) => (t.palette.mode === 'dark' ? '#FBBF24' : '#B45309'), fontWeight: 600, fontSize: '0.72rem' }}>
             Under review
           </Typography>
         </Card>
@@ -269,19 +295,33 @@ export default function CitizenRequestsList({
           sx={{
             p: 1.8,
             cursor: 'pointer',
-            bgcolor: statusFilter === 'IN_PROGRESS' ? '#E6F0EB' : '#FFFFFF',
-            border: `1.5px solid ${statusFilter === 'IN_PROGRESS' ? '#00412E' : 'rgba(0, 65, 46, 0.15)'}`,
+            bgcolor: (t) =>
+              statusFilter === 'IN_PROGRESS'
+                ? t.palette.mode === 'dark'
+                  ? 'rgba(150, 191, 138, 0.2)'
+                  : '#E6F0EB'
+                : 'background.paper',
+            border: (t) =>
+              `1.5px solid ${
+                statusFilter === 'IN_PROGRESS'
+                  ? t.palette.mode === 'dark'
+                    ? '#96BF8A'
+                    : '#00412E'
+                  : t.palette.mode === 'dark'
+                    ? 'rgba(150, 191, 138, 0.15)'
+                    : 'rgba(0, 65, 46, 0.15)'
+              }`,
             transition: 'transform 0.15s ease',
             '&:hover': { transform: 'translateY(-2px)' },
           }}
         >
-          <Typography variant="caption" sx={{ color: '#00412E', fontWeight: 800, textTransform: 'uppercase', fontSize: '0.7rem' }}>
+          <Typography variant="caption" sx={{ color: (t) => (t.palette.mode === 'dark' ? '#96BF8A' : '#00412E'), fontWeight: 800, textTransform: 'uppercase', fontSize: '0.7rem' }}>
             In Progress
           </Typography>
-          <Typography variant="h4" sx={{ fontWeight: 900, color: '#00412E', my: 0.3, fontSize: { xs: '1.7rem', sm: '2rem' } }}>
+          <Typography variant="h4" sx={{ fontWeight: 900, color: (t) => (t.palette.mode === 'dark' ? '#96BF8A' : '#00412E'), my: 0.3, fontSize: { xs: '1.7rem', sm: '2rem' } }}>
             {summaryMetrics.inProgress}
           </Typography>
-          <Typography variant="caption" sx={{ color: '#00412E', fontWeight: 600, fontSize: '0.72rem' }}>
+          <Typography variant="caption" sx={{ color: (t) => (t.palette.mode === 'dark' ? '#96BF8A' : '#00412E'), fontWeight: 600, fontSize: '0.72rem' }}>
             Field action
           </Typography>
         </Card>
@@ -292,19 +332,31 @@ export default function CitizenRequestsList({
           sx={{
             p: 1.8,
             cursor: 'pointer',
-            bgcolor: statusFilter === 'RESOLVED' ? '#DCFCE7' : '#FFFFFF',
-            border: `1.5px solid ${statusFilter === 'RESOLVED' ? '#15803D' : 'rgba(21, 128, 61, 0.15)'}`,
+            bgcolor: (t) =>
+              statusFilter === 'RESOLVED'
+                ? t.palette.mode === 'dark'
+                  ? 'rgba(21, 128, 61, 0.2)'
+                  : '#DCFCE7'
+                : 'background.paper',
+            border: (t) =>
+              `1.5px solid ${
+                statusFilter === 'RESOLVED'
+                  ? '#15803D'
+                  : t.palette.mode === 'dark'
+                    ? 'rgba(21, 128, 61, 0.2)'
+                    : 'rgba(21, 128, 61, 0.15)'
+              }`,
             transition: 'transform 0.15s ease',
             '&:hover': { transform: 'translateY(-2px)' },
           }}
         >
-          <Typography variant="caption" sx={{ color: '#15803D', fontWeight: 800, textTransform: 'uppercase', fontSize: '0.7rem' }}>
+          <Typography variant="caption" sx={{ color: (t) => (t.palette.mode === 'dark' ? '#4ADE80' : '#15803D'), fontWeight: 800, textTransform: 'uppercase', fontSize: '0.7rem' }}>
             Resolved
           </Typography>
-          <Typography variant="h4" sx={{ fontWeight: 900, color: '#15803D', my: 0.3, fontSize: { xs: '1.7rem', sm: '2rem' } }}>
+          <Typography variant="h4" sx={{ fontWeight: 900, color: (t) => (t.palette.mode === 'dark' ? '#4ADE80' : '#15803D'), my: 0.3, fontSize: { xs: '1.7rem', sm: '2rem' } }}>
             {summaryMetrics.resolved}
           </Typography>
-          <Typography variant="caption" sx={{ color: '#15803D', fontWeight: 600, fontSize: '0.72rem' }}>
+          <Typography variant="caption" sx={{ color: (t) => (t.palette.mode === 'dark' ? '#86EFAC' : '#15803D'), fontWeight: 600, fontSize: '0.72rem' }}>
             Interventions done
           </Typography>
         </Card>
@@ -404,12 +456,13 @@ export default function CitizenRequestsList({
           sx={{
             p: 4,
             textAlign: 'center',
-            border: '1px solid rgba(0, 65, 46, 0.08)',
-            bgcolor: '#FFFFFF',
+            border: '1px solid',
+            borderColor: 'divider',
+            bgcolor: 'background.paper',
           }}
         >
           <Box sx={{ fontSize: '2.5rem', mb: 1 }}>🍃</Box>
-          <Typography variant="h6" sx={{ fontWeight: 800, color: '#00412E', mb: 0.3 }}>
+          <Typography variant="h6" sx={{ fontWeight: 800, color: 'text.primary', mb: 0.3 }}>
             No Service Requests Found
           </Typography>
           <Typography variant="body2" color="text.secondary" sx={{ maxWidth: 450, mx: 'auto', mb: 2.5, fontSize: '0.88rem' }}>
@@ -449,14 +502,14 @@ export default function CitizenRequestsList({
                     <Stack direction="row" spacing={0.8} alignItems="center">
                       <Box
                         sx={{
-                          bgcolor: '#E8EAE5',
+                          bgcolor: (t) => (t.palette.mode === 'dark' ? 'rgba(150, 191, 138, 0.15)' : '#E8EAE5'),
                           px: 1,
                           py: 0.3,
                           borderRadius: '4px',
                           fontFamily: 'monospace',
                           fontWeight: 800,
                           fontSize: '0.84rem',
-                          color: '#00412E',
+                          color: (t) => (t.palette.mode === 'dark' ? '#96BF8A' : '#00412E'),
                         }}
                       >
                         {req.referenceNumber}
@@ -465,7 +518,7 @@ export default function CitizenRequestsList({
                         size="small"
                         variant="text"
                         onClick={() => handleCopy(req.referenceNumber, req.id)}
-                        sx={{ fontSize: '0.72rem', fontWeight: 700, color: '#00412E', minWidth: 'auto', p: 0.4 }}
+                        sx={{ fontSize: '0.72rem', fontWeight: 700, color: 'primary.main', minWidth: 'auto', p: 0.4 }}
                       >
                         {copiedId === req.id ? 'Copied!' : 'Copy'}
                       </Button>
@@ -482,7 +535,7 @@ export default function CitizenRequestsList({
                   {/* Category & Location */}
                   <Stack direction="row" alignItems="center" spacing={0.8} sx={{ mb: 0.8 }}>
                     <Typography sx={{ fontSize: '1.1rem' }}>{icon}</Typography>
-                    <Typography variant="subtitle2" sx={{ fontWeight: 800, color: '#0B1C16', fontSize: '0.92rem' }}>
+                    <Typography variant="subtitle2" sx={{ fontWeight: 800, color: 'text.primary', fontSize: '0.92rem' }}>
                       {req.category}
                     </Typography>
                     <Typography variant="caption" sx={{ color: 'text.secondary', fontWeight: 600 }}>
@@ -508,7 +561,7 @@ export default function CitizenRequestsList({
                   </Typography>
 
                   {/* Bottom line: Date & View Details Button */}
-                  <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ pt: 0.8, borderTop: '1px solid rgba(0, 65, 46, 0.06)' }}>
+                  <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ pt: 0.8, borderTop: '1px solid', borderColor: 'divider' }}>
                     <Typography variant="caption" color="text.secondary" sx={{ fontSize: '0.75rem' }}>
                       Submitted {new Date(req.createdAt).toLocaleDateString()}
                     </Typography>
@@ -519,8 +572,8 @@ export default function CitizenRequestsList({
                       sx={{
                         fontWeight: 700,
                         fontSize: '0.78rem',
-                        color: '#00412E',
-                        borderColor: 'rgba(0, 65, 46, 0.25)',
+                        color: (t) => (t.palette.mode === 'dark' ? '#96BF8A' : '#00412E'),
+                        borderColor: (t) => (t.palette.mode === 'dark' ? 'rgba(150, 191, 138, 0.3)' : 'rgba(0, 65, 46, 0.25)'),
                         py: 0.4,
                         px: 1.5,
                       }}
@@ -545,7 +598,7 @@ export default function CitizenRequestsList({
         <DialogTitle sx={{ pb: 1, pt: 2.2 }}>
           <Stack direction="row" justifyContent="space-between" alignItems="flex-start">
             <Box>
-              <Typography variant="h6" sx={{ fontWeight: 900, color: '#00412E', fontSize: '1.15rem' }}>
+              <Typography variant="h6" sx={{ fontWeight: 900, color: 'text.primary', fontSize: '1.15rem' }}>
                 Service Request Progress
               </Typography>
               <Typography variant="caption" color="text.secondary">
@@ -567,13 +620,13 @@ export default function CitizenRequestsList({
           {selectedRequest && (
             <Stack spacing={2}>
               {/* Stepper tracking current progress */}
-              <Box sx={{ width: '100%', py: 1.8, bgcolor: '#F8FAF9', borderRadius: '4px', px: 1.5 }}>
+              <Box sx={{ width: '100%', py: 1.8, bgcolor: (t) => (t.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.03)' : '#F8FAF9'), borderRadius: '4px', px: 1.5 }}>
                 <Stepper
                   activeStep={getStepIndex(selectedRequest.status)}
                   alternativeLabel
                   sx={{
                     '& .MuiStepLabel-label': { fontSize: '0.8rem', fontWeight: 700, mt: 0.6 },
-                    '& .MuiStepIcon-root.Mui-active': { color: '#00412E' },
+                    '& .MuiStepIcon-root.Mui-active': { color: (t: any) => (t.palette.mode === 'dark' ? '#96BF8A' : '#00412E') },
                     '& .MuiStepIcon-root.Mui-completed': { color: '#15803D' },
                   }}
                 >
@@ -590,11 +643,11 @@ export default function CitizenRequestsList({
               </Box>
 
               {/* Request metadata */}
-              <Box sx={{ p: 1.8, bgcolor: '#FFFFFF', borderRadius: '4px', border: '1px solid rgba(0, 65, 46, 0.08)' }}>
-                <Typography variant="caption" sx={{ color: '#00412E', fontWeight: 800, textTransform: 'uppercase', display: 'block', mb: 0.3 }}>
+              <Box sx={{ p: 1.8, bgcolor: (t) => (t.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.03)' : '#FFFFFF'), borderRadius: '4px', border: '1px solid', borderColor: 'divider' }}>
+                <Typography variant="caption" sx={{ color: (t) => (t.palette.mode === 'dark' ? '#96BF8A' : '#00412E'), fontWeight: 800, textTransform: 'uppercase', display: 'block', mb: 0.3 }}>
                   {categoryIconMap[selectedRequest.category] || '📌'} {selectedRequest.category}
                 </Typography>
-                <Typography variant="body2" sx={{ lineHeight: 1.5, color: '#0B1C16', mb: 0.8, fontSize: '0.9rem' }}>
+                <Typography variant="body2" sx={{ lineHeight: 1.5, color: 'text.primary', mb: 0.8, fontSize: '0.9rem' }}>
                   {selectedRequest.description}
                 </Typography>
                 <Divider sx={{ my: 0.8 }} />
@@ -619,7 +672,7 @@ export default function CitizenRequestsList({
                     onError={(e) => {
                       ;(e.target as HTMLImageElement).style.display = 'none'
                     }}
-                    sx={{ maxHeight: 200, width: '100%', borderRadius: '4px', objectFit: 'cover', border: '1px solid #E8EAE5' }}
+                    sx={{ maxHeight: 200, width: '100%', borderRadius: '4px', objectFit: 'cover', border: '1px solid', borderColor: 'divider' }}
                   />
                 </Box>
               )}
@@ -627,10 +680,10 @@ export default function CitizenRequestsList({
               {/* Official County Resolution Note if available */}
               {selectedRequest.resolutionNote ? (
                 <Alert severity="success" sx={{ p: 1.8 }}>
-                  <Typography variant="subtitle2" sx={{ fontWeight: 800, mb: 0.3, color: '#166534', fontSize: '0.88rem' }}>
+                  <Typography variant="subtitle2" sx={{ fontWeight: 800, mb: 0.3, color: (t) => (t.palette.mode === 'dark' ? '#86EFAC' : '#166534'), fontSize: '0.88rem' }}>
                     Official County Resolution Note:
                   </Typography>
-                  <Typography variant="body2" sx={{ color: '#14532D', lineHeight: 1.45, fontSize: '0.85rem' }}>
+                  <Typography variant="body2" sx={{ color: (t) => (t.palette.mode === 'dark' ? '#BBF7D0' : '#14532D'), lineHeight: 1.45, fontSize: '0.85rem' }}>
                     {selectedRequest.resolutionNote}
                   </Typography>
                 </Alert>
@@ -648,7 +701,7 @@ export default function CitizenRequestsList({
         </DialogContent>
 
         <DialogActions sx={{ px: 2.5, pb: 2 }}>
-          <Button onClick={() => setSelectedRequest(null)} sx={{ fontWeight: 700, color: '#00412E' }}>
+          <Button onClick={() => setSelectedRequest(null)} sx={{ fontWeight: 700, color: 'primary.main' }}>
             Close
           </Button>
         </DialogActions>

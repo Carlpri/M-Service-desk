@@ -177,6 +177,28 @@ export function getAppTheme(mode: 'light' | 'dark'): Theme {
         styleOverrides: {
           paper: {
             borderRadius: 4,
+            backgroundColor: isDark ? '#0F261E' : '#FFFFFF',
+            color: isDark ? '#F1F5F3' : '#0B1C16',
+            backgroundImage: 'none',
+          },
+        },
+      },
+      MuiTableHead: {
+        styleOverrides: {
+          root: {
+            backgroundColor: isDark ? 'rgba(255, 255, 255, 0.04)' : '#F8FAF9',
+            '& .MuiTableCell-root': {
+              color: isDark ? '#F1F5F3' : '#00412E',
+              fontWeight: 800,
+            },
+          },
+        },
+      },
+      MuiTableCell: {
+        styleOverrides: {
+          root: {
+            borderColor: isDark ? 'rgba(150, 191, 138, 0.12)' : 'rgba(0, 65, 46, 0.08)',
+            color: isDark ? '#F1F5F3' : '#0B1C16',
           },
         },
       },
@@ -184,6 +206,11 @@ export function getAppTheme(mode: 'light' | 'dark'): Theme {
         styleOverrides: {
           root: {
             borderRadius: 4,
+            ...(isDark && {
+              '& .MuiAlert-message': {
+                color: '#F1F5F3',
+              },
+            }),
           },
         },
       },
